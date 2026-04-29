@@ -1,0 +1,34 @@
+venv/
+.venv/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Runtime data
+access.log
+error.log
+prompt_cache.json
+inbound_config.json
+transfernumbers.json
+twilio_message.json
+benchmark_results*.json
+call_recordings/
+conversation_logs/
+uploads/
+voice_clones/
+transcrip/
+transcripts/
+
+# Local keys and scratch files
+syedmamoonrasheed
+syedmamoonrasheed.pub
+t
+t:*
+
+# Local test artifacts
+deepgram_test.wav
+elevenlabs_test.mp3
+test.wav

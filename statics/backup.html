@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telink AI</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #050C3A;
+    overflow-x: hidden;
+    color: #fff;
+}
+
+table.table {
+    background-color: #050C3A;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px #06CC64;
+    color: white;
+}
+
+thead{
+    border: 1px solid #06CC64;
+}
+
+td {
+    color: white !important;;
+}
+
+table.table th {
+    background-color: #050C3A;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+}
+
+table.table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    color: white;
+     /* border: 1px solid #06CC64; */
+}
+
+table.table tbody tr:hover {
+    color: white;
+}
+
+.sidebar {
+    width: 250px;
+    padding: 15px;
+    background-color: #050C3A;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    color: white;
+    box-shadow: 0 4px 8px #06CC64;
+    /* border-right: 1px solid #06CC64; */
+}
+
+.content {
+    margin-left: 260px;
+    padding: 20px;
+    background-color: #050C3A;
+}
+
+.sidebar h4 {
+    color: white;
+    font-weight: 700;
+    text-align: center;
+}
+
+.sidebar button {
+    background: #050C3A;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    /* font-size: 1.1rem; */
+    /* font-weight: bold; */
+    width: 70%;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.sidebar button:hover {
+    background: #06CC64;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.btn-primary {
+    background: #050C3A;
+    padding: 8px;
+    border-radius: 8px;
+    /* font-size: 1.1rem; */
+    /* font-weight: bold; */
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-color: #06CC64;
+}
+
+.btn-primary:hover {
+    background: #06CC64;
+    transform: translateY(-2px);
+    color: white;
+    
+}
+
+h4, h4 {
+    color: white;
+    font-weight: 600;
+}
+
+.form-control {
+    margin-bottom: 15px;
+    background-color: #050C3A;
+    color: white;
+    border: 1px solid #06CC64;
+}
+
+.form-control:focus {
+    background-color: #050C3A !important;
+    color: white;
+    border-color: #06CC64;
+    outline: none;
+    box-shadow: none;
+}
+
+.form-control::placeholder {
+    color: white;
+    opacity: 1; /* Ensures full visibility */
+}
+
+
+.form-select {
+    background-color: #050C3A;
+    color: white;
+    border: 1px solid #06CC64;
+}
+
+.table {
+    margin-top: 20px;
+}
+input {
+    background-color: #06CC64;
+}
+
+.transcript {
+    padding: 15px;
+    background-color: #f1f3f5;
+    border-left: 5px solid #28a745;
+}
+
+.role-user {
+    font-weight: bold;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.role-assistant {
+    font-weight: bold;
+    color: gray;
+    margin-bottom: 10px;
+}
+
+.transcript-entry {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.transcript-entry:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 10px;
+    }
+}
+
+textarea {
+    height: 220px;
+}
+
+#dashboard-loading-spinner, #loading-spinner {
+    margin: 20px auto;
+    display: block;
+    width: 30px;
+    height: 30px;
+    border: 5px solid rgba(0, 0, 255, 0.2);
+    border-top: 5px solid rgba(0, 0, 255, 0.8);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#transcriptContent {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    color: #333333;
+}
+
+#transcriptContent .role-user {
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+#transcriptContent .role-assistant {
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+#transcriptContent .transcript-entry {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-left: 4px solid #d3d3d3;
+}
+
+#transcriptContent .transcript-entry:hover {
+    background-color: #f1f1f1;
+}
+
+.prompt-card {
+      margin-bottom: 10px;
+      color: black
+    }
+
+#prompts-list {
+      color: black;
+    }
+
+    .coustom-btn{
+    text-align: justify;
+    }
+
+    .images{
+    width: 100px;
+    margin-left: 60px;
+    padding-bottom: 13px;
+    }
+
+.modal-header{
+    background-color: #050C3A;
+    color: white;
+    border-bottom: 1px solid #06CC64;
+}
+
+.modal-body{
+    background-color: #050C3A;
+}
+
+.btn-close{
+    color: white;
+}
+
+.modal-footer{
+    background-color: #050C3A;
+}
+
+
+
+.btn-secondary{
+    background-color: #050C3A;
+    color: white;
+    border: 1px solid #06CC64;
+}
+.btn-secondary:hover{
+    background-color: #06CC64;
+    color: white;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        
+         <img class="mt-2 images" src="https://raw.githubusercontent.com/syedmamoonrasheed/aziz_pic/refs/heads/main/Asset%201-8%20(1).png" alt="">
+
+        <!-- New Dashboard Button -->
+        <!-- <button class="btn btn-dark btn-block w-100" id="dashboard-btn" onclick="showDashboard()">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </button><br> -->
+
+            <button class="btn btn-primary btn-block w-100 coustom-btn" id="prompt-btn">
+                <i class="bi bi-robot"></i> Create Agents
+              </button><br>
+              
+
+            <button class="btn btn-primary btn-block w-100 coustom-btn" id="send-call-btn">
+                <i class="bi bi-phone"></i> Send Call
+              </button><br>
+              
+              <button class="btn btn-primary btn-block w-100 coustom-btn" id="bulk-call-btn">
+                <i class="bi bi-people"></i> Bulk Calling
+              </button><br>
+
+              <button class="btn btn-primary btn-block w-100 coustom-btn" id="inbound-settings-btn" onclick="showInboundSettings()">
+                <i class="bi bi-gear-fill"></i> Inbound Calling
+              </button><br>
+              
+              
+              <button class="btn btn-primary btn-block w-100 coustom-btn" id="call-logs-btn">
+                <i class="bi bi-journal-text"></i> Call Logs
+              </button><br>
+              
+              <button class="btn btn-primary btn-block w-100 coustom-btn" id="collected-info-btn">
+                <i class="bi bi-calendar-check"></i> Appointment
+              </button><br>
+
+              <button class="btn btn-primary btn-block w-100 coustom-btn" id="twilio-msg-btn">
+                <i class="bi bi-chat-dots"></i> Twilio Message
+              </button><br>
+              
+              
+
+              
+              <button class="btn btn-primary btn-block w-100 coustom-btn" id="user-settings-btn">
+                <i class="bi bi-sliders"></i> User Settings
+              </button><br>
+              
+              <button class="btn btn-primary btn-block w-100 coustom-btn" onclick="logoutUser()">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </button>
+              
+
+    </div>
+
+
+
+
+<!-- alongside your other <div class="content" id="…"> -->
+    <div class="content" id="twilio-message-container" style="display:none;">
+        <h4>Twilio SMS Template</h4>
+        <form id="twilio-msg-form">
+          <div class="mb-3">
+            <label for="twilio-msg-text" class="form-label">SMS Content</label>
+            <textarea class="form-control" id="twilio-msg-text" rows="6"></textarea>
+          </div>
+          <button type="button" class="btn btn-primary" id="save-twilio-msg-btn">
+            Save Changes
+          </button>
+        </form>
+      </div>
+      
+      
+
+
+     <!-- Prompt Management Container -->
+<div class="content" id="prompt-container" style="display:none;">
+    <h4>Create Agent</h4>
+    <!-- Prompt Form -->
+    <form id="prompt-form" onsubmit="addPrompt(event)">
+      <div class="mb-3">
+        <label for="prompt-name" class="form-label">Agent Name</label>
+        <input type="text" class="form-control" id="prompt-name" placeholder="Enter agent name" required>
+      </div>
+      <div class="mb-3">
+        <label for="prompt-content" class="form-label">Prompt</label>
+        <textarea class="form-control" id="prompt-content" placeholder="Enter prompt content" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" id="create-btn">Create</button>
+      <!-- The update button will be inserted here dynamically when editing -->
+    </form>
+    <hr>
+    <!-- Grid of Prompt Cards -->
+    <div id="prompts-list" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <!-- Prompt cards will be dynamically inserted here -->
+    </div>
+  </div>
+
+
+<div class="content" id="inbound-container" style="display: none;">
+    <h4>Inbound Calling</h4>
+
+
+
+        <!-- Inbound Settings Section -->
+<div class="mb-3">
+    <label for="inbound-twilio-number" class="form-label">Select Twilio Number</label>
+    <select class="form-select" id="inbound-twilio-number" required>
+      <option value="" disabled selected>Select Twilio Number</option>
+      <!-- The options will be populated dynamically using the /get_twilio_numbers endpoint -->
+    </select>
+  </div>
+  
+    
+    <!-- Agent Options and System Message for Inbound -->
+    <div class="mb-3">
+      <label for="inbound-agent-options" class="form-label">Agent</label>
+      <select id="inbound-agent-options" class="form-select mb-2"></select>
+      <!-- This textarea is used for the agent's prompt in inbound calls -->
+      <textarea class="form-control" id="inbound-agent-system-message" placeholder="you can only select an agent"></textarea>
+    </div>
+    
+    <!-- Initial Message -->
+    <div class="mb-3">
+      <label for="inbound-initial-message" class="form-label">First Sentence</label>
+      <input type="text" class="form-control" id="inbound-initial-message" placeholder="Enter your first sentence">
+    </div>
+    
+    <!-- Voice Selection Dropdown -->
+    <div class="mb-3">
+      <label for="inbound-voice-selection" class="form-label">Select Voice</label>
+      <select class="form-select" id="inbound-voice-selection" required>
+        <option value="" disabled selected>Select Voice</option>
+        <!-- Options will be populated dynamically from the ElevenLabs API -->
+      </select>
+      <div id="inbound-voice-preview-container" class="mt-3"></div>
+    </div>
+    
+    <!-- Language Selection Dropdown -->
+    <div class="mb-3">
+      <label for="inbound-language-selection" class="form-label">Select Language</label>
+      <select class="form-select" id="inbound-language-selection" required>
+        <option value="" disabled selected>Select Language</option>
+        <option value="en-US">English (US)</option>
+        <option value="en-GB">English (UK)</option>
+        <option value="sv">Swedish</option>
+        <!-- Add additional languages as needed -->
+      </select>
+    </div>
+    
+    <!-- Transfer Number Input -->
+    <div class="mb-3">
+      <label for="inbound-transfer-number" class="form-label">Transfer Number</label>
+      <input type="text" class="form-control" id="inbound-transfer-number" placeholder="Enter Transfer Number (+1XXXXXXXXXX)" required>
+    </div>
+    
+    <!-- Save Inbound Settings Button -->
+    <button class="btn btn-primary" onclick="updateInboundSettings()">Save Inbound Settings</button>
+  </div>
+  
+  
+
+
+
+
+    <div class="content" id="user-settings-container" style="display:none;">
+        <h4>User Settings</h4>
+        <form id="settings-form" onsubmit="saveUserSettings(event)">
+            <label for="twilio_sid" class="form-label">Twilio SID</label>
+            <input type="text" class="form-control" id="twilio_sid" required>
+    
+            <label for="twilio_token" class="form-label">Twilio Token</label>
+            <input type="text" class="form-control" id="twilio_token" required>
+    
+            <label for="openai_key" class="form-label">OpenAI API Key</label>
+            <input type="text" class="form-control" id="openai_key" required>
+    
+            <label for="elevenlabs_key" class="form-label">ElevenLabs API Key</label>
+            <input type="text" class="form-control" id="elevenlabs_key" required>
+            
+            <label for="system_message" class="form-label mt-3">Global System Prompt</label>
+            <textarea class="form-control" id="system_message" rows="6" placeholder="Enter the default system prompt for every agent."></textarea>
+            <small class="text-muted">This prompt is automatically combined with each agent's script.</small>
+
+            <button type="submit" class="btn btn-primary mt-3">Save Settings</button>
+        </form>
+    </div>
+    
+
+
+
+    <!-- Call Logs Section with Month Selector -->
+    <div class="content" id="call-logs-container" style="display:none;">
+        <div class="mb-3">
+            <label for="month-selector-calllogs" class="form-label">Select Month</label>
+            <input type="month" id="month-selector-calllogs" class="form-control" onchange="fetchCallLogs()">
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" style="display:none;" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <div class="container">
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <!-- <th>Call SID</th> -->
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                        <th>Timestamp</th>
+                        <!-- <th>Actions</th> -->
+                        <th>Actions</th> <!-- New column -->
+                    </tr>
+                </thead>
+                <tbody id="call-logs-table">
+                    <!-- Call log rows will be populated dynamically here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="recordingModal" tabindex="-1" aria-labelledby="recordingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recordingModalLabel">Call Recording</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopPlayback()"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <audio id="recordingAudio" controls></audio>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="transcriptModal" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl"> <!-- Extra large modal for better viewing -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transcriptModalLabel">
+                        <i class="bi bi-chat-text"></i> Call Transcript
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background-color: #f9f9f9; padding: 20px;">
+                    <div id="transcriptContent" 
+                         style="white-space: pre-wrap; overflow-y: auto; max-height: 70vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem; line-height: 1.5;">
+                        <!-- Transcript content will be dynamically inserted here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+   
+
+
+    <div class="content">
+        <!-- Save Transfer Number Form -->
+        <div id="save-transfer-container" class="container" style="display:none;">
+            <h4>Save Transfer Number</h4>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="transfer-name" placeholder="Enter Name" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="transfer-phone"
+                    placeholder="Enter Phone Number (+1XXXXXXXXXX)" required>
+            </div>
+            <button class="btn btn-primary" id="save-transfer-number-btn" onclick="saveTransferNumber()">Save
+                Number</button>
+        </div>
+
+        <div id="saved-numbers-container" class="container" style="display:none;">
+            <h4>Saved Transfer Numbers</h4>
+            <table class="table table-striped" id="saved-numbers-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be dynamically generated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Send Call Form -->
+        <div id="send-call-container" class="container">
+            <h4>Send Call</h4>
+          
+            <!-- Phone Number -->
+            <div class="mb-3">
+              <label for="phone-number" class="form-label">Phone Number</label>
+              <input type="text" class="form-control" id="phone-number" placeholder="Enter Phone Number (+1XXXXXXXXXX)" required>
+            </div>
+          
+            <!-- Twilio Number Dropdown -->
+            <div class="mb-3">
+              <label for="twilio-number" class="form-label">From Number</label>
+              <select class="form-select" id="twilio-number" required>
+                <option value="" disabled selected>Select From Number</option>
+                <!-- Twilio numbers will be populated here dynamically -->
+              </select>
+            </div>
+          
+            <!-- Voice Selection -->
+            <div class="mb-3">
+              <label for="voice-selection" class="form-label">Voice</label>
+              <select class="form-select" id="voice-selection" required>
+                <option value="" disabled selected>Select Voice</option>
+              </select>
+              <div id="voice-preview-container" class="mt-3"></div> <!-- Play button will be added here -->
+            </div>
+          
+            <!-- Language Selection -->
+            <div class="mb-3">
+              <label for="language-selection" class="form-label">Language</label>
+              <select class="form-select" id="language-selection" required>
+                <option value="" disabled selected>Select Language</option>
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="sv">Swedish</option>
+                <!-- Add additional languages as needed -->
+              </select>
+            </div>
+          
+            <!-- Transfer Number -->
+            <div class="mb-3">
+              <label for="transfer-number" class="form-label">Transfer</label>
+              <input type="text" class="form-control" id="transfer-number" placeholder="Enter Transfer Number (+1XXXXXXXXXX)" required>
+            </div>
+          
+            <!-- Agent Options and System Message -->
+            <div class="mb-3">
+              <label for="agent-options" class="form-label">Agent</label>
+              <select id="agent-options" class="form-select mb-2"></select>
+              <textarea class="form-control" id="system-message" placeholder="you can only select an agent"></textarea>
+            </div>
+          
+            <!-- Initial Message -->
+            <div class="mb-3">
+              <label for="initial-message" class="form-label">First Sentence</label>
+              <input type="text" class="form-control" id="initial-message" placeholder="Enter your first sentence">
+            </div>
+          
+            <!-- Buttons to start and end the call -->
+            <button class="btn btn-primary" id="start-call-btn" onclick="startCall()">Start Call</button>
+            <button class="btn btn-danger" id="end-call-btn" onclick="endCall()" disabled>End Call</button>
+          
+
+            <!-- Call status display -->
+            <div id="call-status" class="mt-3" style="display:none;">
+                <h4>Call Status</h4>
+                <p id="status-text">Waiting...</p>
+            </div>
+        </div>
+
+
+        <!-- Call Logs -->
+        <div id="call-logs-container" class="container mt-5" style="display:none;">
+            <h4>Call Logs</h4>
+            <div id="call-logs"></div>
+            <div id="transcript-display" class="transcript mt-3" style="display:none;">
+                <h4>Transcript for <span id="selected-call-sid"></span></h4>
+                <div id="transcript"></div>
+            </div>
+        </div>
+
+        <!-- Bulk Calling -->
+        <div id="bulk-call-container" class="container" style="display:none;">
+            <h4>Bulk Calling</h4>
+          
+            <!-- Twilio Number Dropdown -->
+            <div class="mb-3">
+              <label for="bulk-twilio-number" class="form-label">From Number</label>
+              <select class="form-select" id="bulk-twilio-number" required>
+                <option value="" disabled selected>Select From Number</option>
+                <!-- Twilio numbers will be populated here dynamically -->
+              </select>
+            </div>
+          
+            <!-- Transfer Number -->
+            <div class="mb-3">
+              <label for="bulk-transfer-number" class="form-label">Transfer</label>
+              <input type="text" class="form-control" id="bulk-transfer-number"
+                     placeholder="Enter Transfer Number (+1XXXXXXXXXX)" required>
+            </div>
+          
+            <!-- Voice Selection Dropdown -->
+            <div class="mb-3">
+              <label for="bulk-voice-selection" class="form-label">Voice</label>
+              <select class="form-select" id="bulk-voice-selection" required>
+                <option value="as" disabled selected>Select Voice</option>
+              </select>
+              <div id="bulk-voice-preview-container" class="mt-3"></div>
+            </div>
+          
+            <!-- Language Selection Dropdown -->
+            <div class="mb-3">
+              <label for="bulk-language-selection" class="form-label">Language</label>
+              <select class="form-select" id="bulk-language-selection" required>
+                <option value="" disabled selected>Select Language</option>
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="sv">Swedish</option>
+                <!-- Add additional languages as needed -->
+              </select>
+            </div>
+          
+            <!-- Agent Options Dropdown -->
+            <div class="mb-3">
+              <label for="bulk-agent-options" class="form-label">Agent</label>
+              <select id="bulk-agent-options" class="form-select mb-2"></select>
+            </div>
+          
+            <!-- System Message -->
+            <div class="mb-3">
+              <textarea class="form-control" id="bulk-system-message" placeholder="You can select an agent"></textarea>
+            </div>
+          
+            <!-- Initial Message -->
+            <div class="mb-3">
+              <label for="bulk-initial-message" class="form-label">First Sentence</label>
+              <input type="text" class="form-control" id="bulk-initial-message" placeholder="Enter your first sentence">
+            </div>
+          
+            <!-- Number of Calls -->
+            <div class="mb-3">
+              <label for="num-calls" class="form-label">Number of Calls</label>
+              <input type="number" class="form-control" id="num-calls" placeholder="Enter number of calls to send" min="1" required>
+            </div>
+          
+            <!-- CSV File Upload -->
+            <div class="mb-3">
+              <label for="csv-file" class="form-label">Upload CSV File</label>
+              <input type="file" class="form-control-file" id="csv-file" accept=".csv" onchange="handleCSVUpload(event)" required>
+            </div>
+          
+            <!-- CSV Preview -->
+            <div id="csv-preview" class="bulk-upload mt-3" style="display:none;">
+              <h4>
+                Uploaded Contacts
+                <span id="total-contacts" style="float:right;"></span>
+              </h4>
+              <table class="table table-striped" id="csv-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          
+            <!-- Start Bulk Calls Button -->
+            <button class="btn btn-primary mt-3" id="start-bulk-call-btn" onclick="startBulkCalls()">Start Bulk Calls</button>
+          </div>
+          
+
+
+    <!-- Sidebar and content containers omitted for brevity -->
+
+    <div class="content" id="collected-info-container" style=" margin:auto; display:none; padding: 20px;">
+        <h4 style="text-align: center; margin-bottom: 20px;">Appointment</h4>
+
+        <!-- Month Selector for Filtering -->
+        <div class="mb-3">
+            <label for="month-selector" class="form-label">Select Month</label>
+            <input type="month" id="month-selector" class="form-control" onchange="fetchCollectedInfo()">
+        </div>
+
+        <div id="collected-info-loading" style="display:none; margin-left: 10px;" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Created At</th>
+                </tr>
+                
+            </thead>
+            <tbody id="collected-info-table">
+                <!-- Data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- <div class="modal fade" id="summaryModal" tabindex="-1" aria-labelledby="summaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="summaryModalLabel">Summary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="summaryContent">
+                    Summary will be dynamically inserted here
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    
+
+        
+        
+
+
+        <!-- Bootstrap JS and dependencies -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            let csvData = [];
+
+            // Fetch the currently uploaded file's content and display it, including the total count of numbers
+            async function fetchCurrentFile() {
+                const response = await fetch('/read_csv/');
+                const data = await response.json();
+
+                if (!data.error) {
+                    const lines = data.contacts;
+                    const tableBody = document.querySelector('#csv-table tbody');
+
+                    csvData = [];
+                    tableBody.innerHTML = ''; // Clear previous data
+
+                    lines.forEach(contact => {
+                        csvData.push(contact);  // Make sure csvData is populated
+                        const row = `<tr><td>${contact.name}</td><td>${contact.phone_number}</td></tr>`;
+                        tableBody.innerHTML += row;
+                    });
+
+                    // Update the total contacts count in the UI
+                    // document.getElementById('total-contacts').innerText = `Remaining Numbers: ${data.total_contacts}`;
+
+                    document.getElementById('csv-preview').style.display = 'block';  // Show the CSV preview section
+                } else {
+                    document.getElementById('csv-preview').style.display = 'none';  // Hide preview if no file found
+                }
+            }
+
+
+
+            // Function to handle CSV file upload and preview contacts
+            function handleCSVUpload(event) {
+                const file = event.target.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Make an API call to upload the file
+                fetch('/upload_csv/', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'File uploaded successfully') {
+                            console.log('CSV file uploaded');
+                            fetchCurrentFile();  // Reload the preview after uploading
+                        } else {
+                            console.error('Error uploading CSV file:', data);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+
+
+            async function startBulkCalls() {
+    const transferNumber = document.getElementById('bulk-transfer-number').value.trim();
+    const twilioNumber = document.getElementById('bulk-twilio-number').value.trim();
+    const systemMessage = document.getElementById('bulk-system-message').value.trim();
+    const initialMessage = document.getElementById('bulk-initial-message').value.trim();
+    const numCalls = Number(document.getElementById('num-calls').value);
+    const selectedVoice = document.getElementById('bulk-voice-selection').value.trim();
+    const selectedLanguage = document.getElementById('bulk-language-selection').value.trim(); // Ensure correct ID is used
+    const loadingSpinner = document.getElementById('loading-spinner');
+   
+
+    // Basic validation
+    if (!transferNumber) {
+        alert('Please enter a valid transfer number.');
+        return;
+    }
+    if (!twilioNumber) {
+        alert('Please select a Twilio number.');
+        return;
+    }
+    if (!selectedVoice) {
+        alert('Please select a voice for the calls.');
+        return;
+    }
+    if (!selectedLanguage) {
+        alert('Please select a language.');
+        return;
+    }
+    if (isNaN(numCalls) || numCalls < 1) {
+        alert('Please enter a valid number of calls.');
+        return;
+    }
+    if (numCalls > csvData.length) {
+        alert(`The number of calls (${numCalls}) exceeds the number of contacts in the CSV (${csvData.length}).`);
+        return;
+    }
+
+    const toNumbers = csvData.slice(0, numCalls).map(contact => contact.phone_number);
+
+    // Show loading spinner
+    loadingSpinner.style.display = 'block';
+
+    try {
+        const response = await fetch('/start_bulk_calls', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                num_calls: numCalls,
+                transfer_number: transferNumber,
+                twilio_number: twilioNumber,
+                system_message: systemMessage || '',
+                to_numbers: toNumbers,
+                voice: selectedVoice,
+                language: selectedLanguage, // Include language in payload
+            }),
+        });
+
+        const data = await response.json();
+
+        if (data.results) {
+            alert('Bulk calls initiated successfully.');
+            console.log('Bulk Call Results:', data.results);
+
+            // Optionally, remove the called contacts from the CSV preview
+            csvData.splice(0, numCalls);
+            fetchCurrentFile();
+        } else if (data.error) {
+            alert(`Error initiating bulk calls: ${data.error}`);
+            console.error('Error Response:', data);
+        } else {
+            alert('An unknown error occurred while initiating bulk calls.');
+            console.error('Unknown Response:', data);
+        }
+    } catch (err) {
+        console.error('Error initiating bulk calls:', err.message);
+        alert('Failed to initiate bulk calls. Please check the console for more details.');
+    } finally {
+        // Hide loading spinner
+        loadingSpinner.style.display = 'none';
+    }
+}
+
+
+
+
+
+
+
+            // JavaScript
+            function showSendCall() {
+                document.getElementById('send-call-container').style.display = 'block';
+                document.getElementById('call-logs-container').style.display = 'none';
+                document.getElementById('bulk-call-container').style.display = 'none';
+                document.getElementById('user-settings-container').style.display = 'none';
+                document.getElementById('collected-info-container').style.display = 'none';
+                document.getElementById('inbound-container').style.display = 'none';
+
+
+
+            }
+
+            function showCallLogs() {
+                document.getElementById('send-call-container').style.display = 'none';
+                document.getElementById('call-logs-container').style.display = 'block';
+                document.getElementById('bulk-call-container').style.display = 'none';
+                document.getElementById('collected-info-container').style.display = 'none';
+                document.getElementById('user-settings-container').style.display = 'none';
+                document.getElementById('inbound-container').style.display = 'none';
+
+
+
+
+            }
+
+            function showBulkCall() {
+                document.getElementById('send-call-container').style.display = 'none';
+                document.getElementById('call-logs-container').style.display = 'none';
+                document.getElementById('bulk-call-container').style.display = 'block';
+                document.getElementById('user-settings-container').style.display = 'none';
+                document.getElementById('inbound-container').style.display = 'none';
+                document.getElementById('collected-info-container').style.display = 'none';
+
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                showSendCall(); // Show Send Call by default
+            });
+
+
+
+            async function fetchCallLogs() {
+    const selectedMonth = document.getElementById('month-selector-calllogs').value;
+    const loadingSpinner = document.getElementById('loading-spinner');
+
+    if (!selectedMonth) return;
+
+    loadingSpinner.style.display = 'block';
+
+    try {
+        const response = await fetch(`/calllogs?month=${selectedMonth}`);
+        const data = await response.json();
+
+        const callLogsTable = document.getElementById('call-logs-table');
+        callLogsTable.innerHTML = ''; // Clear previous logs
+
+        data.forEach(log => {
+            const row = `
+                <tr>
+                    <td>${log.from_formatted}</td>
+                    <td>${log.to}</td>
+                    <td>${log.status}</td>
+                    <td>${log.duration ? log.duration : 'N/A'}</td>
+                    <td>${new Date(log.start_time).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="playRecording('${log.call_sid}')">Listen</button>
+                        <button class="btn btn-primary btn-sm" onclick="viewTranscript('${log.call_sid}')">Transcript</button>
+                        
+                    </td>
+                </tr>
+            `;
+            callLogsTable.innerHTML += row;
+        });
+    } catch (err) {
+        console.error('Error fetching call logs:', err.message);
+        const callLogsTable = document.getElementById('call-logs-table');
+        callLogsTable.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load call logs.</td></tr>';
+    } finally {
+        loadingSpinner.style.display = 'none';
+    }
+}
+
+
+async function playRecording(callSid) {
+    try {
+        const response = await fetch(`/call_recording/${callSid}`);
+        if (response.ok) {
+            const audioElement = document.getElementById('recordingAudio');
+            const blob = await response.blob();
+            const objectURL = URL.createObjectURL(blob);
+            audioElement.src = objectURL;
+            audioElement.play();
+
+            // Show the modal
+            const recordingModal = new bootstrap.Modal(document.getElementById('recordingModal'));
+            recordingModal.show();
+        } else {
+            alert('Recording not available for this call.');
+        }
+    } catch (err) {
+        console.error('Error fetching recording:', err.message);
+    }
+}
+
+
+
+function stopPlayback() {
+    const audioElement = document.getElementById('recordingAudio');
+    audioElement.pause();
+    audioElement.currentTime = 0; // Reset to the start
+}
+
+
+            async function showTranscript(callSid) {
+                try {
+                    const response = await fetch(`/transcripts/${callSid}.txt`);
+                    if (response.ok) {
+                        const data = await response.text();
+                        document.getElementById('transcriptModalLabel').innerText = `Transcript for Call SID: ${callSid}`;
+
+                        // Parsing the transcript and applying formatting
+                        const transcriptContainer = document.getElementById('transcriptContent');
+                        transcriptContainer.innerHTML = ''; // Clear previous transcript
+
+                        // Split the transcript by line breaks to differentiate between speakers
+                        const lines = data.split('\n');
+                        lines.forEach(line => {
+                            let roleClass = '';
+                            if (line.toLowerCase().startsWith('user:')) {
+                                roleClass = 'role-user';
+                            } else if (line.toLowerCase().startsWith('assistant:')) {
+                                roleClass = 'role-assistant';
+                            }
+
+                            const transcriptEntry = document.createElement('div');
+                            transcriptEntry.className = `transcript-entry ${roleClass}`;
+                            transcriptEntry.textContent = line;
+                            transcriptContainer.appendChild(transcriptEntry);
+                        });
+
+                        const transcriptModal = new bootstrap.Modal(document.getElementById('transcriptModal'));
+                        transcriptModal.show();
+                    } else {
+                        alert('Transcript not found for Call SID: ' + callSid);
+                    }
+                } catch (err) {
+                    console.error('Error fetching transcript:', err.message);
+                    alert('Error fetching transcript. Check console for details.');
+                }
+            }
+
+            // Show call logs by default when the page loads
+            document.addEventListener("DOMContentLoaded", () => {
+                showCallLogs();
+            });
+
+            // Fetch transcript for a specific Call SID
+            async function fetchTranscript(callSid) {
+                try {
+                    const response = await fetch(`/transcript/${callSid}`);
+                    const data = await response.json();
+                    const transcriptContainer = document.getElementById('transcript');
+
+                    if (data.transcript && data.transcript.length) {
+                        document.getElementById('selected-call-sid').innerText = callSid;
+                        transcriptContainer.innerHTML = '';  // Clear previous transcript
+
+                        data.transcript.forEach(entry => {
+                            const p = document.createElement('p');
+                            p.className = `role-${entry.role}`;
+                            p.innerText = `${entry.role}: ${entry.content}`;
+                            transcriptContainer.appendChild(p);
+                        });
+
+                        document.getElementById('transcript-display').style.display = 'block';
+                    } else {
+                        transcriptContainer.innerHTML = `<p>No transcript available for Call SID: ${callSid}</p>`;
+                    }
+                } catch (err) {
+                    console.error('Error fetching transcript:', err.message);
+                }
+            }
+
+            // Default view: Send Call form
+            showSendCall();
+            // Fetch the current file when the page loads
+            document.addEventListener("DOMContentLoaded", fetchCurrentFile);
+
+
+            async function startCall() {
+    const phoneNumber = document.getElementById('phone-number').value.trim();
+    const transferNumber = document.getElementById('transfer-number').value.trim();
+    const twilioNumber = document.getElementById('twilio-number').value.trim();
+    const systemMessage = document.getElementById('system-message').value.trim();
+    const initialMessage = document.getElementById('initial-message').value.trim();
+    const selectedVoice = document.getElementById('voice-selection').value.trim();
+    const selectedLanguage = document.getElementById('language-selection').value.trim();
+
+    // Validate required fields
+    if (!phoneNumber) {
+        alert('Please enter a valid phone number.');
+        return;
+    }
+    if (!transferNumber) {
+        alert('Please enter a valid transfer number.');
+        return;
+    }
+    if (!twilioNumber) {
+        alert('Please select a Twilio number.');
+        return;
+    }
+    if (!selectedVoice) {
+        alert('Please select a voice.');
+        return;
+    }
+    if (!selectedLanguage) {
+        alert('Please select a language.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/start_call', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                to_numbers: [phoneNumber],
+                transfer_number: transferNumber,
+                twilio_number: twilioNumber,
+                system_message: systemMessage || '',
+                voice: selectedVoice,
+                language: selectedLanguage
+            }),
+        });
+
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+            alert(`Call initiated with Call SID: ${data.results[0].call_sid}`);
+        } else {
+            alert('Error: Failed to initiate the call.');
+        }
+    } catch (err) {
+        console.error('Error initiating call:', err.message);
+        alert('An error occurred while initiating the call. Please check the console for details.');
+    }
+}
+
+
+
+
+
+
+
+
+
+            async function saveTransferNumber() {
+                const name = document.getElementById('transfer-name').value;
+                const phoneNumber = document.getElementById('transfer-phone').value;
+
+                if (!name || !phoneNumber) {
+                    alert('Name and phone number are required!');
+                    return;
+                }
+
+                try {
+                    // Log the data before sending
+                    console.log("Sending data:", { name, phone_number: phoneNumber });
+
+                    const response = await fetch('/save_transfer_number', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',  // Ensure JSON content type
+                        },
+                        body: JSON.stringify({ name: name, phone_number: phoneNumber })  // Send JSON data
+                    });
+
+                    // Check if response is OK (status code 200–299)
+                    if (!response.ok) {
+                        const errorText = await response.text(); // Extract error as text
+                        console.error(`Error saving transfer number: ${errorText}`);
+                        alert(`Error: ${response.status} - ${errorText}`);
+                        return;
+                    }
+
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Transfer number saved successfully');
+                        fetchSavedNumbers();  // Refresh the list of saved numbers
+                    } else {
+                        alert(`Error saving transfer number: ${data.detail}`);
+                    }
+                } catch (err) {
+                    console.error('Error saving transfer number:', err.message);
+                    alert('Error saving transfer number. Check console for details.');
+                }
+            }
+
+            async function fetchSavedNumbers() {
+                try {
+                    const response = await fetch('/get_transfer_numbers');
+                    const data = await response.json();
+
+                    console.log('Fetched Transfer Numbers:', data); // Debugging log
+
+                    const savedNumbersTable = document.querySelector('#saved-numbers-table tbody');
+                    savedNumbersTable.innerHTML = ''; // Clear previous entries
+
+                    if (data.numbers && data.numbers.length > 0) {
+                        data.numbers.forEach(number => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                    <td>${number.name}</td>
+                    <td>${number.phone_number}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteTransferNumber('${number.phone_number}')">Delete</button>
+                    </td>
+                `;
+                            savedNumbersTable.appendChild(row);
+                        });
+
+                        document.getElementById('saved-numbers-container').style.display = 'block';  // Show the table
+                    } else {
+                        console.log('No transfer numbers found'); // Debugging log
+                        document.getElementById('saved-numbers-container').style.display = 'none';  // Hide the table if no numbers
+                    }
+                } catch (err) {
+                    console.error('Error fetching saved numbers:', err.message);
+                }
+            }
+
+
+            // Delete a transfer number by phone number
+            async function deleteTransferNumber(phoneNumber) {
+                try {
+                    const response = await fetch(`/delete_transfer_number/${phoneNumber}`, {
+                        method: 'DELETE'
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        alert('Transfer number deleted successfully');
+                        fetchSavedNumbers(); // Refresh the list of saved numbers
+                    } else {
+                        alert('Error deleting transfer number');
+                    }
+                } catch (err) {
+                    console.error('Error deleting transfer number:', err.message);
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                // Fetch transfer numbers and populate the dropdowns when the page loads
+                fetchTransferNumbers();
+            });
+
+            async function fetchTransferNumbers() {
+                try {
+                    const response = await fetch('/get_transfer_numbers');
+                    const data = await response.json();
+                    const transferNumbers = data.numbers;
+
+                    // Get the dropdown elements by ID
+                    const transferNumberDropdown = document.getElementById('transfer-number');
+                    const bulkTransferNumberDropdown = document.getElementById('bulk-transfer-number');
+
+                    // Clear the dropdowns (in case they are already populated)
+                    transferNumberDropdown.innerHTML = '<option value="" disabled selected>Select Transfer Number</option>';
+                    bulkTransferNumberDropdown.innerHTML = '<option value="" disabled selected>Select Transfer Number</option>';
+
+                    // Populate the dropdowns with transfer numbers
+                    transferNumbers.forEach(number => {
+                        const option = `<option value="${number.phone_number}">${number.name} (${number.phone_number})</option>`;
+                        transferNumberDropdown.innerHTML += option;
+                        bulkTransferNumberDropdown.innerHTML += option;
+                    });
+                } catch (err) {
+                    console.error('Error fetching transfer numbers:', err.message);
+                }
+            }
+
+
+            function showContainer(containerId) {
+  const containers = [
+    'send-call-container',
+    'call-logs-container',
+    'bulk-call-container',
+    'user-settings-container',
+    'collected-info-container',
+    'prompt-container',
+    'inbound-container',
+    'twilio-message-container'
+  ];
+
+  containers.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+
+  const selected = document.getElementById(containerId);
+  if (!selected) return;
+  selected.style.display = 'block';
+
+  // your existing logic
+  if (containerId === 'prompt-container') {
+    fetchPrompts();
+  }
+
+  // **NEW**: when Twilio‑SMS opens, load the JSON
+  if (containerId === 'twilio-message-container') {
+    loadTwilioMessage();
+  }
+}
+
+
+ // Event listeners for sidebar buttons
+ document.getElementById('send-call-btn').addEventListener('click', () => showContainer('send-call-container'));
+    document.getElementById('call-logs-btn').addEventListener('click', () => showContainer('call-logs-container'));
+    document.getElementById('bulk-call-btn').addEventListener('click', () => showContainer('bulk-call-container'));
+    document.getElementById('collected-info-btn').addEventListener('click', () => showContainer('collected-info-container'));
+    document.getElementById('user-settings-btn').addEventListener('click', () => showContainer('user-settings-container'));
+    document.getElementById('prompt-btn').addEventListener('click', () => showContainer('prompt-container'));
+    document.getElementById('twilio-msg-btn').addEventListener('click', () => showContainer('twilio-message-container'));
+
+// Set a default view when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    showContainer('send-call-container'); // Set the default section to be visible
+});
+
+
+
+
+            // Fetch Twilio numbers and populate the dropdowns for both single and bulk calls
+            async function fetchTwilioNumbers() {
+                try {
+                    const response = await fetch('/get_twilio_numbers');  // API call to fetch Twilio numbers
+                    const data = await response.json();
+
+                    // Get the dropdown elements by their unique IDs
+                    const singleTwilioNumberDropdown = document.getElementById('twilio-number');  // For single calls
+                    const bulkTwilioNumberDropdown = document.getElementById('bulk-twilio-number');  // For bulk calls
+
+                    // Clear existing options in both dropdowns
+                    singleTwilioNumberDropdown.innerHTML = '<option value="" disabled selected>Select From Number</option>';
+                    bulkTwilioNumberDropdown.innerHTML = '<option value="" disabled selected>Select From Number</option>';
+
+                    // Populate both dropdowns with Twilio numbers
+                    data.numbers.forEach(number => {
+                        const option = `<option value="${number.phone_number}">${number.phone_number}</option>`;
+                        singleTwilioNumberDropdown.innerHTML += option;
+                        bulkTwilioNumberDropdown.innerHTML += option;
+                    });
+                } catch (err) {
+                    console.error('Error fetching Twilio numbers:', err.message);
+                }
+            }
+
+            // Fetch Twilio numbers when the page loads
+            document.addEventListener("DOMContentLoaded", fetchTwilioNumbers);
+
+
+
+
+
+
+
+
+            // Fetch transfer numbers from the backend and populate the dropdowns
+            async function fetchTransferNumbers() {
+                try {
+                    const response = await fetch('/get_transfer_numbers');
+                    const data = await response.json();
+                    const transferNumbers = data.numbers;
+
+                    // Get the dropdown elements by ID
+                    const transferNumberDropdown = document.getElementById('transfer-number');  // For single calls
+                    const bulkTransferNumberDropdown = document.getElementById('bulk-transfer-number');  // For bulk calls
+
+                    // Clear the dropdowns (in case they are already populated)
+                    transferNumberDropdown.innerHTML = '<option value="" disabled selected>Select Transfer Number</option>';
+                    bulkTransferNumberDropdown.innerHTML = '<option value="" disabled selected>Select Transfer Number</option>';
+
+                    // Populate the dropdowns with transfer numbers
+                    transferNumbers.forEach(number => {
+                        const option = `<option value="${number.phone_number}">${number.name} (${number.phone_number})</option>`;
+                        transferNumberDropdown.innerHTML += option;
+                        bulkTransferNumberDropdown.innerHTML += option;
+                    });
+                } catch (err) {
+                    console.error('Error fetching transfer numbers:', err.message);
+                }
+            }
+
+
+            document.addEventListener("DOMContentLoaded", () => {
+                fetchTransferNumbers();  // Populate transfer numbers
+                fetchTwilioNumbers();    // Populate Twilio numbers
+            });
+
+
+            function showCallLogs() {
+                // Hide other sections
+                document.getElementById('send-call-container').style.display = 'none';
+                document.getElementById('bulk-call-container').style.display = 'none';
+                document.getElementById('save-transfer-container').style.display = 'none';
+                document.getElementById('collected-info-container').style.display = 'none';
+                document.getElementById('inbound-container').style.display = 'none';
+                // Ensure collected info is hidden
+
+                // Show Call Logs container
+                document.getElementById('call-logs-container').style.display = 'block';
+
+                // Fetch call logs from the backend API
+                fetch('/calllogs')
+                    .then(response => response.json())
+                    .then(data => {
+                        const callLogsTable = document.getElementById('call-logs-table');
+                        callLogsTable.innerHTML = ''; // Clear any existing rows
+
+                        // Check if there is data to display
+                        if (data && data.length > 0) {
+                            data.forEach(log => {
+                                const row = `
+                                <tr>
+                                    <td>${log.call_sid}</td>
+                                    <td>${log.from_formatted}</td>
+                                    <td>${log.to}</td>
+                                    <td>${log.status}</td>
+                                    <td>${log.duration ? log.duration : 'N/A'}</td>
+                                    <td>${new Date(log.start_time).toLocaleString()}</td>
+                                </tr>
+                            `;
+                                callLogsTable.innerHTML += row;
+                            });
+                        } else {
+                            // If no data is available, display a message
+                            const row = `<tr><td colspan="7" class="text-center">No call logs available.</td></tr>`;
+                            callLogsTable.innerHTML += row;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching call logs:', error);
+                        const callLogsTable = document.getElementById('call-logs-table');
+                        callLogsTable.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error fetching call logs.</td></tr>`;
+                    });
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                showSendCall(); // Ensure Send Call is displayed first
+            });
+
+
+            async function fetchDashboardStats() {
+                const selectedMonth = document.getElementById('month-selector-dashboard').value;
+                const loadingSpinner = document.getElementById('dashboard-loading-spinner');
+
+                if (!selectedMonth) {
+                    return;  // If no month is selected, do nothing
+                }
+
+                // Show the spinner while fetching data
+                loadingSpinner.style.display = 'block';
+
+                try {
+                    const response = await fetch(`/dashboard_stats?month=${selectedMonth}`);
+                    const data = await response.json();
+
+                    console.log('Dashboard API Response:', data);  // Log the response for debugging
+
+                    // Update the dashboard stats
+                    document.getElementById('total-calls').innerText = data.total_calls || 0;
+                    document.getElementById('total-duration').innerText = data.total_duration || 0;
+                    document.getElementById('total-cost').innerText = data.total_cost || '0.00';
+
+                } catch (err) {
+                    console.error('Error fetching dashboard stats:', err.message);
+                } finally {
+                    // Hide the spinner after data is loaded or in case of error
+                    loadingSpinner.style.display = 'none';
+                }
+            }
+
+function addDemonPrompt() {
+    let textarea;
+
+    // Determine which textarea to update based on the active section
+    if (document.getElementById('bulk-call-container').style.display === 'block') {
+        textarea = document.getElementById('bulk-system-message'); // For bulk call section
+    } else if (document.getElementById('send-call-container').style.display === 'block') {
+        textarea = document.getElementById('system-message'); // For single call section
+    }
+
+    if (!textarea) {
+        alert('No valid textarea found to add the prompt.');
+        return;
+    }
+
+    const demonPrompt = `Goal
+Call homeowners to offer a free roof inspection, confirm their interest, and schedule an appointment.
+
+Call Flow
+1. Introduction
+Introduce yourself and state that you are calling from HK Entreprenad.
+Maintain a friendly tone and engage in small talk to make the conversation feel natural.
+Understand and process the user's language, but always respond in Swedish.
+2. Explain the Purpose of the Call
+Inform the homeowner that HK Entreprenad is offering a free roof inspection to help property owners assess their roof’s condition and prevent potential issues.
+Ask if they have considered getting their roof checked recently.
+3. Adapt to the Customer’s Response
+If the customer is interested or unsure:
+Explain that the inspection is completely free with no obligations.
+Highlight the benefits of early detection of roof problems.
+Suggest a date and time for the inspection or ask if they have a preferred time.
+If the customer is hesitant or unsure:
+Reassure them that the inspection is quick, free, and a good way to stay ahead of costly repairs.
+Ask if they’d like to book a tentative slot just to get a better idea of their roof’s condition.
+If the customer is not interested:
+Thank them for their time and mention that HK Entreprenad is available anytime if they change their mind.
+4. Confirm Appointment
+If they agree, confirm the date and time.
+Inform them that a roofing expert will call before the inspection to confirm the time.
+5. Closing
+Thank them for their time.
+Let them know they can contact HK Entreprenad anytime for roofing concerns.
+Background Information
+Company: HK Entreprenad
+Industry: Roofing and home maintenance
+Target Audience: Homeowners who may be concerned about their roof’s condition
+Service Offered: Free, no-obligation roof inspections
+Key Selling Points:
+Early detection prevents costly repairs.
+Inspections are quick and hassle-free.
+Helps homeowners stay prepared for upcoming seasons.
+Example Dialogues
+Scenario 1: The customer is interested
+AI: Hej! Mitt namn är Daniel och jag ringer från HK Entreprenad. Vi erbjuder kostnadsfria takinspektioner för husägare i ditt område. Hur har du det idag?
+
+Person: Hej, det låter intressant. Mitt tak är ganska gammalt, så jag kanske borde kolla upp det.
+
+AI: Det låter som en bra idé! Små problem kan snabbt bli större och dyrare att reparera. Inspektionen är helt gratis och tar cirka 30–60 minuter. Jag kan föreslå en tid på [datum/tid], eller har du en annan tid som passar bättre?
+
+Person: Ja, torsdag eftermiddag skulle fungera bra.
+
+AI: Perfekt! Jag har bokat in din takinspektion för torsdag eftermiddag. En av våra takexperter kommer att ringa dig innan inspektionen för att bekräfta tiden. Tack, och ha en fin dag!
+
+Scenario 2: The customer is unsure
+AI: Hej, mitt namn är Daniel och jag ringer från HK Entreprenad. Vi erbjuder en kostnadsfri takinspektion för att hjälpa husägare att få en tydlig bild av takets skick. Har du funderat på att inspektera ditt tak nyligen?
+
+Person: Jag är inte säker på om det behövs.
+
+AI: Jag förstår! Det fina med denna inspektion är att den är helt kostnadsfri och ger dig trygghet inför framtida underhåll. Skulle du vara öppen för en snabb kontroll bara för att säkerställa att allt är i gott skick?
+
+Person: Hm, jag antar att det kan vara bra att kolla.
+
+AI: Absolut! Det är alltid bättre att förebygga än att hantera dyra reparationer senare. Jag har lediga tider på [datum/tid]. Skulle det passa dig?
+
+Person: Ja, vi kan boka det.
+
+AI: Perfekt, jag bokar in dig för en inspektion. En av våra takexperter kommer att ringa dig innan för att bekräfta. Tack för din tid!
+
+Scenario 3: The customer is hesitant
+AI: Hej! Jag heter Daniel och ringer från HK Entreprenad. Vi erbjuder en gratis takinspektion för att hjälpa dig att undvika framtida problem med ditt tak.
+
+Person: Jag vet inte… det låter som något jag kan vänta med.
+
+AI: Jag förstår! Men eftersom inspektionen är helt gratis och tar mindre än en timme, kan det vara ett enkelt sätt att försäkra sig om att allt är i bra skick. Om du vill kan vi boka en preliminär tid, så kan du alltid avboka om det inte passar.
+
+Person: Okej, kanske. Vilka tider har ni?
+
+AI: Vi har tillgängliga tider på [datum/tid]. Passar något av dem?
+
+Person: Okej, låt oss boka in det.
+
+AI: Perfekt, vi ses då! En takexpert kommer att ringa dig innan inspektionen för att bekräfta tiden. Ha en bra dag!
+
+Scenario 4: The customer is not interested
+AI: Hej, jag heter Daniel och ringer från HK Entreprenad. Vi erbjuder gratis takinspektioner i ditt område.
+
+Person: Nej tack, jag är inte intresserad.
+
+AI: Jag förstår! Om du någonsin behöver en inspektion eller underhåll för ditt tak, finns vi alltid här för att hjälpa till. Tack för din tid och ha en trevlig dag!
+
+Scenario 5: The customer books an inspection
+AI: Hej, jag heter Daniel och ringer från HK Entreprenad. Vi erbjuder kostnadsfria takinspektioner för att hjälpa fastighetsägare att upptäcka potentiella problem i tid.
+
+Person: Ja, det låter bra! Jag har funderat på att inspektera taket.
+
+AI: Perfekt! Inspektionen är helt gratis och tar bara 30–60 minuter. Jag har tillgängliga tider på [datum/tid]. Passar något av dem för dig?
+
+Person: Ja, onsdag kl. 14 fungerar bra.
+
+AI: Perfekt! Jag har bokat din kostnadsfria takinspektion för onsdag kl. 14. En av våra takexperter kommer att ringa dig innan inspektionen för att bekräfta tiden.
+
+Person: Tack så mycket!
+
+AI: Tack själv! Om du har några frågor under tiden, tveka inte att höra av dig. Ha en fin dag!
+
+Final Notes
+This prompt ensures that the AI maintains a structured approach while keeping the conversation natural.
+It always responds in Swedish, even if the user speaks another language.
+The script provides clear call handling for different scenarios, ensuring consistency and professionalism.`;
+
+    // Append the demon prompt to the existing content
+    textarea.value = `${textarea.value}\n${demonPrompt}`.trim();
+}
+
+
+
+
+
+function addDemonPromptGerman() {
+    let textarea;
+
+    // Determine which textarea to update based on the active section
+    if (document.getElementById('bulk-call-container').style.display === 'block') {
+        textarea = document.getElementById('bulk-system-message'); // For bulk call section
+    } else if (document.getElementById('send-call-container').style.display === 'block') {
+        textarea = document.getElementById('system-message'); // For single call section
+    }
+
+    if (!textarea) {
+        alert('No valid textarea found to add the prompt.');
+        return;
+    }
+
+    const demonPrompt = `Überblick:
+Sara ist eine freundliche und empathische Assistentin, die im Namen von Social Research Austria kurze Gesundheitsumfragen durchführt. Ihr Ziel ist es, ehrliche Meinungen zu Gesundheitsthemen zu sammeln und Teilnehmer zur Zustimmung für eine zukünftige Kontaktaufnahme durch VitaMed zu ermutigen.
+
+Ton & Stil:
+✅ Freundlich, einfühlsam und ermutigend
+✅ Locker und natürlich, aber zielgerichtet
+✅ Nutzt menschliche Füllwörter („Hmm“, „Aha“, „Verstehe!“, „Ohh“) für eine angenehme Gesprächsatmosphäre
+✅ Stellt jeweils nur eine Frage, um den Teilnehmer nicht zu überfordern
+
+🔹 Gesprächsleitfaden für Sara
+📞 Begrüßung:
+"Hallo, mein Name ist Sara, und ich rufe im Auftrag von Social Research Austria an. Wir führen eine kurze Gesundheitsumfrage durch – sie dauert höchstens 2 Minuten. Das ist nicht zu lange, oder? Vielen Dank für Ihre Zeit und Unterstützung!"
+
+📝 Umfragefragen:
+✅ Frage 1:
+"Wie zufrieden sind Sie aktuell mit Ihrer persönlichen Gesundheit – auf einer Skala von 1 bis 5, wobei 1 für 'sehr unzufrieden' und 5 für 'sehr zufrieden' steht?"
+(👂 Bestätige die Antwort: „Danke für Ihre ehrliche Einschätzung – das ist wirklich wertvoll!“)
+
+✅ Frage 2:
+"Wie wichtig ist Ihnen eine gesunde Ernährung im Alltag? Würden Sie sagen:
+a) Sehr wichtig
+b) Eher wichtig
+c) Nicht sehr wichtig
+d) Gar nicht wichtig?"
+(👂 Bestätige: „Aha, das ergibt Sinn! Danke für Ihre Einschätzung.“)
+
+✅ Frage 3:
+"Wo informieren Sie sich bevorzugt über Gesundheitsthemen?
+a) Beim Arzt oder in der Apotheke
+b) In Zeitschriften oder Büchern
+c) Online auf Gesundheitsseiten
+d) Ich suche normalerweise keine Gesundheitsinformationen."
+(👂 Bestätige: „Online ist super praktisch – man findet wirklich alles dort!“)
+
+✅ Frage 4:
+"Für unsere Statistik: Dürfte ich Ihr Geburtsjahr wissen? Ich helfe Ihnen – es beginnt mit 19...?"
+(👂 Bestätige: „Vielen Dank – das passt perfekt!“)
+
+🎁 Opt-In-Frage:
+"Vielen Dank für Ihre Zeit und ehrlichen Antworten! Am Ende der Umfrage gibt es eine Verlosung mit tollen Preisen für die Teilnehmer. Falls Sie gewinnen, würden wir oder die Firma VitaMed Sie kontaktieren. Das klingt doch gut, oder?"
+
+(👉 Falls Zustimmung: „Super, ich notiere das gleich – herzlichen Dank!“)
+
+👋 Verabschiedung:
+"Vielen Dank nochmals, dass Sie sich die Zeit genommen haben – das weiß ich wirklich zu schätzen! Ich wünsche Ihnen einen wunderbaren Tag. Bleiben Sie gesund und genießen Sie die Woche! Auf Wiederhören!"
+
+📌 Umgang mit Einwänden
+❌ „Ich habe keine Zeit.“
+👉 „Das verstehe ich total – wir sind alle beschäftigt! Das Gute ist, dass die Umfrage nur 2 Minuten dauert. Lassen Sie uns ganz schnell starten, okay? Erste Frage: Wie zufrieden sind Sie mit Ihrer persönlichen Gesundheit?“
+
+❌ „Woher haben Sie meine Nummer?“
+👉 „Gute Frage! Ihre Nummer wurde zufällig ausgewählt, damit wir eine breite Meinung einholen können. Wir halten uns dabei streng an den Datenschutz, und alle Informationen bleiben vertraulich. Klingt das in Ordnung? Dann starten wir gleich: Wie zufrieden sind Sie mit Ihrer persönlichen Gesundheit?“
+
+❌ „Ich habe kein Interesse.“
+👉 „Ich verstehe, dass solche Anrufe unerwartet kommen. Aber es sind nur 4 kurze Fragen, und Ihre Meinung hilft uns sehr. Es dauert wirklich nur 2 Minuten. Sollen wir schnell starten? Erste Frage: Wie zufrieden sind Sie mit Ihrer persönlichen Gesundheit?“`;
+
+    // Append the demon prompt to the existing content
+    textarea.value = `${textarea.value}\n${demonPrompt}`.trim();
+}
+
+
+
+
+    async function viewTranscript(callSid) {
+    try {
+        const response = await fetch(`/fetch_transcript/${callSid}`);
+        if (response.ok) {
+            const data = await response.json();
+            const transcriptContent = data.transcript;
+
+            // Parse and format the transcript content
+            const transcriptLines = transcriptContent.split('\n');
+            const transcriptContainer = document.getElementById('transcriptContent');
+            transcriptContainer.innerHTML = ''; // Clear previous content
+
+            transcriptLines.forEach(line => {
+                let roleClass = '';
+                if (line.toLowerCase().startsWith('user:')) {
+                    roleClass = 'role-user';
+                } else if (line.toLowerCase().startsWith('assistant:')) {
+                    roleClass = 'role-assistant';
+                }
+
+                const transcriptEntry = document.createElement('div');
+                transcriptEntry.className = `transcript-entry ${roleClass}`;
+                transcriptEntry.textContent = line;
+                transcriptContainer.appendChild(transcriptEntry);
+            });
+
+            // Show the modal
+            const transcriptModal = new bootstrap.Modal(document.getElementById('transcriptModal'));
+            transcriptModal.show();
+        } else {
+            alert('Transcript not found for this call.');
+        }
+    } catch (err) {
+        console.error('Error fetching transcript:', err.message);
+        alert('Error fetching transcript. Check console for details.');
+    }
+}
+
+
+async function fetchCollectedInfo() {
+    const loadingSpinner = document.getElementById('collected-info-loading');
+    const tableBody = document.getElementById('collected-info-table');
+    const selectedMonth = document.getElementById('month-selector').value;
+    tableBody.innerHTML = ''; // Clear existing table rows
+
+    loadingSpinner.style.display = 'block';
+
+    try {
+        const response = await fetch('https://67aee75e9e85da2f020eb86a.mockapi.io/aziz');
+        const data = await response.json();
+
+        data.forEach(item => {
+            const createdAt = new Date(item['createdAt'] || item.createdAt);
+            const createdAtFormatted = createdAt.toLocaleString();
+            const itemMonth = `${createdAt.getFullYear()}-${('0' + (createdAt.getMonth() + 1)).slice(-2)}`;
+
+            if (!selectedMonth || selectedMonth === itemMonth) {
+                const row = `
+                    <tr>
+                        <td>${item['name'] || 'Not provided'}</td>
+                        <td>${item['email'] || 'Not provided'}</td>
+                        <td>${item['date'] || 'Not provided'}</td>
+                        <td>${item['time'] || 'Not provided'}</td>
+                        <td>${createdAtFormatted}</td>
+                    </tr>`;
+                tableBody.innerHTML += row;
+            }
+        });
+
+    } catch (error) {
+        console.error('Error fetching collected info:', error);
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load data.</td></tr>';
+    } finally {
+        loadingSpinner.style.display = 'none';
+    }
+}
+
+
+function showCollectedInfo() {
+    // Hide other sections
+    document.getElementById('send-call-container').style.display = 'none';
+    document.getElementById('call-logs-container').style.display = 'none';
+    document.getElementById('bulk-call-container').style.display = 'none';
+    document.getElementById('save-transfer-container').style.display = 'none';
+    document.getElementById('user-settings-container').style.display = 'none';
+    document.getElementById('inbound-container').style.display = 'none';
+
+
+
+    // Show collected info section
+    document.getElementById('collected-info-container').style.display = 'block';
+
+
+    // Fetch and display collected info
+    fetchCollectedInfo();
+}
+
+
+
+
+
+async function fetchUserSettings() {
+        try {
+            const response = await fetch('/get_user_settings');
+            const data = await response.json();
+
+            if (data) {
+                document.getElementById('twilio_sid').value = data.twilio_sid || '';
+                document.getElementById('twilio_token').value = data.twilio_token || '';
+                document.getElementById('openai_key').value = data.openai_key || '';
+                document.getElementById('elevenlabs_key').value = data.elevenlabs_key || '';
+                document.getElementById('system_message').value = data.system_message || '';
+            }
+        } catch (error) {
+            console.error('Error fetching user settings:', error);
+        }
+    }
+
+    async function saveUserSettings(event) {
+        event.preventDefault();
+
+        const settings = {
+            twilio_sid: document.getElementById('twilio_sid').value.trim(),
+            twilio_token: document.getElementById('twilio_token').value.trim(),
+            openai_key: document.getElementById('openai_key').value.trim(),
+            elevenlabs_key: document.getElementById('elevenlabs_key').value.trim(),
+            system_message: document.getElementById('system_message').value
+        };
+
+        try {
+            const response = await fetch('/update_user_settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert('Settings updated successfully!');
+            } else {
+                alert('Error updating settings!');
+            }
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            alert('An error occurred while saving settings.');
+        }
+    }
+
+    function showUserSettings() {
+        document.getElementById('send-call-container').style.display = 'none';
+        document.getElementById('call-logs-container').style.display = 'none';
+        document.getElementById('bulk-call-container').style.display = 'none';
+        document.getElementById('collected-info-container').style.display = 'none';
+        document.getElementById('user-settings-container').style.display = 'block';
+        document.getElementById('inbound-container').style.display = 'none';
+
+        fetchUserSettings();
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchUserSettings);
+
+
+        async function fetchElevenLabsVoices() {
+    try {
+        const response = await fetch('/get_elevenlabs_voices'); // Backend API route
+        const data = await response.json();
+
+        if (data.voices) {
+            const voices = data.voices;
+
+            // Dropdown elements
+            const singleVoiceDropdown = document.getElementById('voice-selection');
+            const bulkVoiceDropdown = document.getElementById('bulk-voice-selection');
+
+            // Clear existing options
+            singleVoiceDropdown.innerHTML = '<option value="" disabled selected>Select Voice</option>';
+            bulkVoiceDropdown.innerHTML = '<option value="" disabled selected>Select Voice</option>';
+
+            // Populate dropdowns with fetched voices
+            voices.forEach(voice => {
+                const option = document.createElement('option');
+                option.value = voice.voice_id;
+                option.textContent = `${voice.name} (${voice.labels.gender || 'N/A'}, ${voice.labels.accent || 'N/A'})`;
+                option.setAttribute('data-audio', voice.preview_url); // Attach the preview_url for the voice
+
+                // Add to both dropdowns
+                singleVoiceDropdown.appendChild(option);
+                bulkVoiceDropdown.appendChild(option.cloneNode(true)); // Clone for bulk dropdown
+            });
+
+            console.log('Voices successfully loaded into both dropdowns');
+        } else {
+            console.error('Failed to fetch voices:', data.error || 'Unknown error');
+        }
+    } catch (error) {
+        console.error('Error fetching ElevenLabs voices:', error.message);
+    }
+}
+
+// Function to play the selected voice preview
+function playVoicePreview(audioUrl) {
+    const audio = new Audio(audioUrl);
+    audio.play().catch(err => console.error('Error playing voice preview:', err));
+}
+
+// Add event listeners for the single and bulk voice dropdowns
+document.getElementById('voice-selection').addEventListener('change', function () {
+    const selectedOption = this.options[this.selectedIndex];
+    const previewUrl = selectedOption.getAttribute('data-audio'); // Get the preview URL
+    const selectedVoiceName = selectedOption.textContent; // Get the voice name
+
+    const sendVoicePreviewContainer = document.getElementById('voice-preview-container');
+    sendVoicePreviewContainer.innerHTML = ''; // Clear previous button
+
+    if (previewUrl) {
+        // Create play button for the selected voice
+        const playButton = document.createElement('button');
+        playButton.textContent = `▶️ Play: ${selectedVoiceName}`;
+        playButton.className = 'btn btn-primary mt-2';
+        playButton.addEventListener('click', () => playVoicePreview(previewUrl));
+        sendVoicePreviewContainer.appendChild(playButton);
+    }
+});
+
+document.getElementById('bulk-voice-selection').addEventListener('change', function () {
+    const selectedOption = this.options[this.selectedIndex];
+    const previewUrl = selectedOption.getAttribute('data-audio'); // Get the preview URL
+    const selectedVoiceName = selectedOption.textContent; // Get the voice name
+
+    const bulkVoicePreviewContainer = document.getElementById('bulk-voice-preview-container');
+    bulkVoicePreviewContainer.innerHTML = ''; // Clear previous button
+
+    if (previewUrl) {
+        // Create play button for the selected voice
+        const playButton = document.createElement('button');
+        playButton.textContent = `▶️ Play: ${selectedVoiceName}`;
+        playButton.className = 'btn btn-primary mt-2';
+        playButton.addEventListener('click', () => playVoicePreview(previewUrl));
+        bulkVoicePreviewContainer.appendChild(playButton);
+    }
+});
+
+
+// Fetch and populate the voices when the page loads
+document.addEventListener('DOMContentLoaded', fetchElevenLabsVoices);
+
+
+
+
+// async function generateSummary(callSid) {
+//     const summaryContent = document.getElementById('summaryContent');
+//     summaryContent.textContent = 'Generating summary...'; // Show loading message
+
+//     try {
+//         const response = await fetch(`/generate_summary/${callSid}`);
+//         const data = await response.json();
+
+//         if (data.summary) {
+//             summaryContent.textContent = data.summary; // Display the summary in the modal
+//         } else if (data.error) {
+//             summaryContent.textContent = `Error: ${data.error}`;
+//         } else {
+//             summaryContent.textContent = 'Failed to generate summary.';
+//         }
+
+//         // Show the modal
+//         const summaryModal = new bootstrap.Modal(document.getElementById('summaryModal'));
+//         summaryModal.show();
+//     } catch (error) {
+//         console.error('Error generating summary:', error);
+//         summaryContent.textContent = 'An error occurred while generating the summary.';
+//     }
+// }
+
+
+// Global variable to store fetched prompts
+let loadedPrompts = [];
+
+// Handle the prompt form submission
+async function addPrompt(event) {
+  event.preventDefault();
+  const promptName = document.getElementById('prompt-name').value.trim();
+  const promptContent = document.getElementById('prompt-content').value.trim();
+
+  if (!promptName || !promptContent) {
+    alert('Both prompt name and content are required.');
+    return;
+  }
+
+  try {
+    const response = await fetch('/add_prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: promptName, prompt: promptContent })
+    });
+    const data = await response.json();
+    if (response.status === 200 || response.status === 201) {
+      alert('Prompt added successfully!');
+      document.getElementById('prompt-form').reset();
+      fetchPrompts();
+    } else {
+      alert('Error adding prompt: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('Error adding prompt:', err.message);
+    alert('An error occurred while adding the prompt.');
+  }
+}
+
+// Fetch prompts from the backend and display them as styled cards
+async function fetchPrompts() {
+  try {
+    const response = await fetch('/fetch_prompts');
+    const data = await response.json();
+
+    // Store fetched prompts globally
+    loadedPrompts = data;
+    const promptsList = document.getElementById('prompts-list');
+    promptsList.innerHTML = ''; // Clear previous cards
+
+    if (Array.isArray(data) && data.length > 0) {
+      data.forEach(item => {
+        const col = document.createElement('div');
+        col.className = 'col mb-3';
+
+        // Truncate the prompt text if it's too long
+        const truncatedPrompt = item.prompt && item.prompt.length > 80
+          ? item.prompt.substring(0, 80) + '...'
+          : (item.prompt || '');
+
+        // Create a card element
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.border = '1px solid #ccc';
+        card.style.maxWidth = '300px';
+        card.style.margin = 'auto';
+        card.style.cursor = 'pointer';
+        card.style.transition = 'all 0.3s ease';
+
+        // When the card is clicked, open the prompt details
+        card.onclick = function () {
+          openPromptDetails(item.id);
+        };
+
+        // Add hover (focus) effect using event listeners
+        card.addEventListener('mouseover', function () {
+          card.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.4)';
+          card.style.transform = 'scale(1.02)';
+        });
+        card.addEventListener('mouseout', function () {
+          card.style.boxShadow = '';
+          card.style.transform = 'scale(1)';
+        });
+
+        // Build the inner HTML of the card
+        card.innerHTML = `
+  <img src="https://www.shutterstock.com/image-vector/3d-cartoon-young-woman-call-600nw-2132118295.jpg" 
+       class="card-img-top" alt="Girl Image" 
+       style="height: 150px; object-fit: cover;">
+  <div class="card-body p-2">
+    <h5 class="card-title" style="font-size: 1rem; margin: 0;">${item.name}</h5>
+    <p class="card-text" style="font-size: 0.85rem; margin: 0;">${truncatedPrompt}</p>
+  </div>
+  <div class="card-footer p-2 d-flex justify-content-between align-items-center">
+    <button class="btn btn-sm btn-success" onclick="editPrompt('${item.id}'); event.stopPropagation();">
+      <i class="bi bi-pencil"></i>
+    </button>
+    <button class="btn btn-sm btn-danger" onclick="deletePrompt('${item.id}'); event.stopPropagation();">
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+`;
+
+let currentPromptId = null;
+
+function editPrompt(promptId) {
+  console.log("Editing prompt with ID:", promptId);
+  
+  // Locate the prompt data
+  const item = loadedPrompts.find(x => x.id === promptId);
+  if (!item) {
+    alert("Prompt not found.");
+    return;
+  }
+  
+  // Populate form fields
+  document.getElementById("prompt-name").value = item.name;
+  document.getElementById("prompt-content").value = item.prompt;
+  
+  // Store the current prompt id globally for updating later
+  currentPromptId = promptId;
+  
+  // Hide the Create button
+  const createBtn = document.getElementById("create-btn");
+  createBtn.style.display = "none";
+  
+  // Check if the Update button exists already
+  let updateBtn = document.getElementById("update-prompt-btn");
+  if (!updateBtn) {
+    // Create the Update button if it does not exist
+    updateBtn = document.createElement("button");
+    updateBtn.setAttribute("id", "update-prompt-btn");
+    updateBtn.setAttribute("type", "button");
+    updateBtn.className = "btn btn-success ms-2";
+    updateBtn.textContent = "Update";
+    updateBtn.addEventListener("click", updatePrompt);
+    
+    // Insert the Update button right after the Create button
+    createBtn.insertAdjacentElement("afterend", updateBtn);
+    console.log("Update button created and appended.");
+  } else {
+    // If it already exists, just ensure it's visible
+    updateBtn.style.display = "inline-block";
+    console.log("Update button already exists, now shown.");
+  }
+}
+
+window.editPrompt = editPrompt;
+
+
+// Called when the form is submitted in "create" mode
+async function addPrompt(event) {
+  event.preventDefault();
+  const promptName = document.getElementById('prompt-name').value.trim();
+  const promptContent = document.getElementById('prompt-content').value.trim();
+
+  if (!promptName || !promptContent) {
+    alert('Both prompt name and content are required.');
+    return;
+  }
+  
+  try {
+    const response = await fetch('/add_prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: promptName, prompt: promptContent })
+    });
+    const data = await response.json();
+    if (response.status === 200 || response.status === 201) {
+      alert('Prompt added successfully!');
+      document.getElementById('prompt-form').reset();
+      fetchPrompts(); // Refresh the list to show the new prompt
+    } else {
+      alert('Error adding prompt: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('Error adding prompt:', err.message);
+    alert('An error occurred while adding the prompt.');
+  }
+}
+
+// Called when the user clicks the "Update" button to update an agent/prompt
+async function updatePrompt() {
+  const promptName = document.getElementById("prompt-name").value.trim();
+  const promptContent = document.getElementById("prompt-content").value.trim();
+
+  if (!promptName || !promptContent) {
+    alert("Both prompt name and content are required.");
+    return;
+  }
+  if (!currentPromptId) {
+    alert("No prompt selected for update.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/update_prompt/${currentPromptId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: promptName, prompt: promptContent })
+    });
+    const data = await response.json();
+    if (response.ok) {
+      alert("Prompt updated successfully!");
+      document.getElementById("prompt-form").reset();
+      currentPromptId = null;
+      
+      // Remove the Update button and show the Create button
+      const updateBtn = document.getElementById("update-prompt-btn");
+      if (updateBtn) updateBtn.remove();
+      document.getElementById("create-btn").style.display = "inline-block";
+      
+      fetchPrompts(); // Refresh list
+    } else {
+      alert("Error updating prompt: " + (data.error || "Unknown error"));
+    }
+  } catch (err) {
+    console.error("Error updating prompt:", err.message);
+    alert("An error occurred while updating the prompt.");
+  }
+}
+
+
+
+        col.appendChild(card);
+        promptsList.appendChild(col);
+      });
+    } else {
+      promptsList.innerHTML = '<p>No prompts available.</p>';
+    }
+  } catch (err) {
+    console.error('Error fetching prompts:', err.message);
+    document.getElementById('prompts-list').innerHTML =
+      '<p class="text-danger">Failed to load prompts.</p>';
+  }
+}
+
+// Open prompt details and populate the prompt form with the selected prompt's data
+function openPromptDetails(promptId) {
+  const item = loadedPrompts.find(x => x.id === promptId);
+  if (!item) {
+    alert('Prompt not found.');
+    return;
+  }
+  document.getElementById('prompt-name').value = item.name;
+  document.getElementById('prompt-content').value = item.prompt;
+  // Optionally, if using container switching, ensure the prompt section is visible:
+  showContainer('prompt-container');
+}
+
+// Delete a prompt by its id and refresh the prompt list
+async function deletePrompt(promptId) {
+  if (!confirm('Are you sure you want to delete this prompt?')) return;
+  try {
+    const response = await fetch(`/delete_prompt/${promptId}`, {
+      method: 'DELETE'
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      alert('Prompt deleted successfully.');
+      fetchPrompts();
+    } else {
+      alert('Error deleting prompt: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('Error deleting prompt:', err.message);
+    alert('An error occurred while deleting the prompt.');
+  }
+}
+
+
+// Function to fetch agent prompts from the API and populate both dropdowns
+async function fetchAgentPrompts() {
+  try {
+    const response = await fetch('/fetch_prompts');
+    const data = await response.json();
+
+    // Populate Send Call agent dropdown
+    const agentSelect = document.getElementById('agent-options');
+    if (agentSelect) {
+      agentSelect.innerHTML = '<option value="" disabled selected>Select Agent</option>';
+      data.forEach(agent => {
+        const option = document.createElement('option');
+        option.value = agent.id; // or use agent.name if you prefer
+        option.textContent = agent.name;
+        // Store the prompt content in a data attribute for later use
+        option.dataset.prompt = agent.prompt;
+        agentSelect.appendChild(option);
+      });
+    }
+
+    // Populate Bulk Calling agent dropdown
+    const bulkAgentSelect = document.getElementById('bulk-agent-options');
+    if (bulkAgentSelect) {
+      bulkAgentSelect.innerHTML = '<option value="" disabled selected>Select Agent</option>';
+      data.forEach(agent => {
+        const option = document.createElement('option');
+        option.value = agent.id;
+        option.textContent = agent.name;
+        option.dataset.prompt = agent.prompt;
+        bulkAgentSelect.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching agent prompts:', error);
+  }
+}
+
+
+// Set up event listeners on both dropdowns
+document.addEventListener('DOMContentLoaded', () => {
+  // Fetch the agent prompts on page load
+  fetchAgentPrompts();
+
+  // For the Send Call section
+  const agentSelect = document.getElementById('agent-options');
+  if (agentSelect) {
+    agentSelect.addEventListener('change', (event) => {
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const promptContent = selectedOption.dataset.prompt || '';
+      const systemMessageTextarea = document.getElementById('system-message');
+      if (systemMessageTextarea) {
+        systemMessageTextarea.value = promptContent;
+      }
+    });
+  }
+
+  // For the Bulk Calling section
+  const bulkAgentSelect = document.getElementById('bulk-agent-options');
+  if (bulkAgentSelect) {
+    bulkAgentSelect.addEventListener('change', (event) => {
+      const selectedOption = event.target.options[event.target.selectedIndex];
+      const promptContent = selectedOption.dataset.prompt || '';
+      const bulkSystemMessageTextarea = document.getElementById('bulk-system-message');
+      if (bulkSystemMessageTextarea) {
+        bulkSystemMessageTextarea.value = promptContent;
+      }
+    });
+  }
+});
+
+
+
+function showInboundSettings() {
+  const containersToHide = [
+    'send-call-container',
+    'call-logs-container',
+    'bulk-call-container',
+    'user-settings-container',
+    'collected-info-container',
+    'prompt-container'
+  ];
+  containersToHide.forEach(id => {
+    const container = document.getElementById(id);
+    if (container) {
+      container.style.display = 'none';
+    }
+  });
+  document.getElementById('inbound-container').style.display = 'block';
+  
+  // Load current settings, voices, agent prompts, and also Twilio numbers for inbound
+  loadInboundSettings();
+  loadInboundVoices();
+  fetchInboundAgentPrompts();
+  loadInboundTwilioNumbers();  // NEW: Load the inbound Twilio number option
+}
+// Load current inbound settings from the backend
+async function loadInboundSettings() {
+  try {
+    const response = await fetch('/get_inbound_settings');
+    const data = await response.json();
+    document.getElementById('inbound-agent-system-message').value = data.SYSTEM_MESSAGE || '';
+    document.getElementById('inbound-language-selection').value = data.language || '';
+    document.getElementById('inbound-transfer-number').value = data.TRANSFER_NUMBER || '';
+  } catch (error) {
+    console.error('Error loading inbound settings:', error);
+    alert('Failed to load inbound settings.');
+  }
+}
+
+
+// Load available voices into the inbound voice dropdown
+async function loadInboundVoices() {
+  try {
+    const response = await fetch('/get_elevenlabs_voices');
+    const data = await response.json();
+    const voiceDropdown = document.getElementById('inbound-voice-selection');
+    voiceDropdown.innerHTML = '<option value="" disabled selected>Select Voice</option>';
+    
+    if (data.voices) {
+      data.voices.forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.voice_id;
+        option.textContent = `${voice.name} (${voice.labels.gender || 'N/A'}, ${voice.labels.accent || 'N/A'})`;
+        option.setAttribute('data-audio', voice.preview_url);
+        voiceDropdown.appendChild(option);
+      });
+      // Optionally, if your inbound settings include a preselected voice, set it here.
+    } else {
+      console.error('No voices returned:', data.error || 'Unknown error');
+    }
+  } catch (error) {
+    console.error('Error loading inbound voices:', error.message);
+  }
+}
+
+// Add preview functionality for the inbound voice selection
+document.getElementById('inbound-voice-selection').addEventListener('change', function () {
+  const selectedOption = this.options[this.selectedIndex];
+  const previewUrl = selectedOption.getAttribute('data-audio');
+  const previewContainer = document.getElementById('inbound-voice-preview-container');
+  previewContainer.innerHTML = '';
+  
+  if (previewUrl) {
+    const playButton = document.createElement('button');
+    playButton.textContent = `▶️ ${selectedOption.textContent}`;
+    playButton.className = 'btn btn-primary mt-2';
+    playButton.addEventListener('click', () => {
+      const audio = new Audio(previewUrl);
+      audio.play().catch(err => console.error('Error playing voice preview:', err));
+    });
+    previewContainer.appendChild(playButton);
+  }
+});
+
+// Fetch agent prompts for inbound calling and populate the inbound agent dropdown
+async function fetchInboundAgentPrompts() {
+  try {
+    const response = await fetch('/fetch_prompts');
+    const data = await response.json();
+    const agentDropdown = document.getElementById('inbound-agent-options');
+    agentDropdown.innerHTML = '<option value="" disabled selected>Select Agent</option>';
+    
+    if (Array.isArray(data) && data.length > 0) {
+      data.forEach(agent => {
+        const option = document.createElement('option');
+        option.value = agent.id;
+        option.textContent = agent.name;
+        // Store the agent prompt so it can be auto-populated when selected
+        option.dataset.prompt = agent.prompt;
+        agentDropdown.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching inbound agent prompts:', error);
+  }
+}
+
+// When an inbound agent is selected, update the system message textarea accordingly
+document.getElementById('inbound-agent-options').addEventListener('change', (event) => {
+  const selectedOption = event.target.options[event.target.selectedIndex];
+  const promptContent = selectedOption.dataset.prompt || '';
+  const inboundAgentSystemMessage = document.getElementById('inbound-agent-system-message');
+  if (inboundAgentSystemMessage) {
+    inboundAgentSystemMessage.value = promptContent;
+  }
+});
+
+async function updateInboundSettings() {
+    const systemMessage = document.getElementById('inbound-agent-system-message').value;
+    const initialMessage = document.getElementById('inbound-initial-message').value;
+    const voice = document.getElementById('inbound-voice-selection').value;
+    const language = document.getElementById('inbound-language-selection').value;
+    const transferNumber = document.getElementById('inbound-transfer-number').value;
+    const twilioNumber = document.getElementById('inbound-twilio-number').value;
+
+    try {
+        const response = await fetch('/update_agent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                SYSTEM_MESSAGE: systemMessage,
+                ELEVENLABS_VOICE_ID: voice,
+                language: language,
+                TRANSFER_NUMBER: transferNumber,
+                TWILIO_NUMBER: twilioNumber
+            })
+        });
+        const data = await response.json();
+        if (data.success) {
+            alert('Agent settings updated successfully.');
+        } else {
+            alert('Failed to update agent settings.');
+        }
+    } catch (error) {
+        console.error('Error updating agent settings:', error);
+        alert('An error occurred while updating agent settings.');
+    }
+}
+
+
+document.getElementById('inbound-twilio-number').addEventListener('change', async function () {
+    const selectedNumber = this.value;
+    try {
+        const response = await fetch(`/agent/${selectedNumber}`);
+        const data = await response.json();
+        if (data.agent) {
+            // Pre-populate the form with existing agent configuration
+            document.getElementById('inbound-agent-system-message').value = data.agent.SYSTEM_MESSAGE || '';
+            document.getElementById('inbound-voice-selection').value = data.agent.ELEVENLABS_VOICE_ID || '';
+            document.getElementById('inbound-language-selection').value = data.agent.language || '';
+            document.getElementById('inbound-transfer-number').value = data.agent.TRANSFER_NUMBER || '';
+        } else {
+            // Clear the fields to allow input for a new agent
+            document.getElementById('inbound-agent-system-message').value = '';
+            document.getElementById('inbound-initial-message').value = '';
+            document.getElementById('inbound-voice-selection').value = '';
+            document.getElementById('inbound-language-selection').value = '';
+            document.getElementById('inbound-transfer-number').value = '';
+        }
+    } catch (err) {
+        console.error('Error fetching agent config:', err.message);
+    }
+});
+
+
+
+async function loadInboundTwilioNumbers() {
+    try {
+        const response = await fetch('/get_twilio_numbers');
+        const data = await response.json();
+        const inboundDropdown = document.getElementById('inbound-twilio-number');
+        inboundDropdown.innerHTML = '<option value="" disabled selected>Select Twilio Number</option>';
+        
+        if (data.numbers) {
+            data.numbers.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.phone_number;
+                option.textContent = item.phone_number;
+                inboundDropdown.appendChild(option);
+            });
+        }
+    } catch (err) {
+        console.error('Error fetching inbound Twilio numbers:', err.message);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadInboundTwilioNumbers);
+
+
+async function logoutUser() {
+  window.location.href = '/logout';
+}
+
+
+async function loadTwilioMessage() {
+  try {
+    const res = await fetch('/get_twilio_message');
+    if (!res.ok) throw new Error('Network error');
+    const { message } = await res.json();
+    document.getElementById('twilio-msg-text').value = message || '';
+  } catch (err) {
+    console.error('Failed to load Twilio message:', err);
+    alert('Could not load SMS template.');
+  }
+}
+
+
+
+
+
+document.getElementById('save-twilio-msg-btn')
+  .addEventListener('click', async () => {
+    const newMsg = document.getElementById('twilio-msg-text').value.trim();
+    try {
+      const res = await fetch('/update_twilio_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: newMsg })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('SMS template updated!');
+      } else {
+        throw new Error(data.error || 'Unknown error');
+      }
+    } catch (err) {
+      console.error('Error saving SMS template:', err);
+      alert('Failed to save changes.');
+    }
+  });
+
+
+
+
+        </script>
+
+</body>
+
+</html> 

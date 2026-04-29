@@ -1,0 +1,2362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Associatte AI</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    /* === ALL YOUR EXISTING STYLES REMAIN UNCHANGED === */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: white; overflow-x: hidden; color: black; }
+    table.table { background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px black; color: black; }
+    thead { border: 1px solid black; }
+    .input-group .btn-outline-secondary { background-color: white; color: black; border: 1px solid black; }
+    .input-group .btn-outline-secondary:hover { background-color: black; color: white; }
+    td { color: black !important; }
+    table.table th { background-color: white; text-align: center; padding: 10px; font-weight: bold; text-transform: uppercase; color: black; }
+    table.table td { text-align: center; vertical-align: middle; padding: 12px; color: black; }
+    table.table tbody tr:hover { color: black; }
+    .sidebar { width: 250px; padding: 15px; background-color: white; height: 100vh; position: fixed; top: 0; color: black; box-shadow: 0 4px 8px black; }
+    .content { margin-left: 260px; padding: 20px; background-color: white; }
+    .sidebar h4 { color: black; font-weight: 700; text-align: center; }
+    .sidebar button { background: white; border: none; padding: 8px; border-radius: 8px; width: 70%; color: black; cursor: pointer; transition: all 0.3s ease; margin-top: 10px; }
+    .sidebar button:hover { background: black; transform: scale(1.05); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); color: white; }
+    .btn-primary, .btn-success, .btn-secondary { background: black !important; padding: 8px; border-radius: 8px; color: white !important; cursor: pointer; transition: all 0.3s ease; border: none !important; }
+    .btn-primary:hover, .btn-success:hover, .btn-secondary:hover { background: black !important; transform: translateY(-3px); color: white !important; }
+    h4 { color: black; font-weight: 600; }
+    .form-control, .form-select { margin-bottom: 15px; background-color: white; color: black; border: 1px solid black; }
+    .form-control:focus, .form-select:focus { background-color: white !important; color: black; border-color: black; outline: none; box-shadow: none; }
+    .form-control::placeholder { color: black; opacity: 1; }
+    .table { margin-top: 20px; }
+    .card { background-color: white; border: 1px solid black; color: black; }
+    .card .card-body { color: black; }
+    .transcript { padding: 15px; background-color: #f1f3f5; border-left: 5px solid #28a745; }
+    .role-user { color: #007bff; font-weight: bold; }
+    .role-assistant { color: #28a745; font-weight: bold; }
+    textarea { height: 220px; }
+    #dashboard-loading-spinner, #loading-spinner { margin: 20px auto; display: block; width: 30px; height: 30px; border: 5px solid rgba(0, 0, 255, 0.2); border-top: 5px solid rgba(0, 0, 255, 0.8); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    #transcriptContent { padding: 10px; border-radius: 8px; background-color: #ffffff; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); color: #333333; }
+    #transcriptContent .role-user { color: #007bff; }
+    #transcriptContent .role-assistant { color: #28a745; }
+    .modal-header, .modal-body, .modal-footer { background-color: white; color: black; }
+    .modal-header { border-bottom: 1px solid black; }
+    .btn-close { filter: invert(1); }
+    .images { width: 150px; margin-left: 33px; padding-bottom: 13px; }
+    .coustom-btn { text-align: justify; }
+    @media (max-width: 992px) {
+        .sidebar { width: 100%; height: auto; position: relative; padding: 10px; }
+        .content { margin-left: 0; }
+    }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img class="mt-2 images" src="static/asscociatte.jpg" alt="">
+        <button class="btn btn-primary btn-block w-100 coustom-btn" id="dashboard-btn">
+          <i class="bi bi-speedometer2"></i> Dashboard
+        </button><br>
+       
+        <button class="btn btn-primary btn-block w-100 coustom-btn" id="prompt-btn">
+            <i class="bi bi-robot"></i> Create Agents
+        </button><br>
+
+        <button class="btn btn-primary btn-block w-100 coustom-btn" id="send-call-btn">
+            <i class="bi bi-phone"></i> Send Call
+        </button><br>
+       
+        <button class="btn btn-primary btn-block w-100 coustom-btn" id="bulk-call-btn">
+            <i class="bi bi-people"></i> Bulk Calling
+        </button><br>
+       
+        <button class="btn btn-primary btn-block w-100 coustom-btn" id="call-logs-btn">
+            <i class="bi bi-journal-text"></i> Call Logs
+        </button><br>
+       
+        <!-- Appointment is commented out -->
+        <!-- <button class="btn btn-primary btn-block w-100 coustom-btn" id="collected-info-btn">
+            <i class="bi bi-calendar-check"></i> Appointment
+        </button><br> -->
+
+        <!-- Twilio Message is commented out -->
+        <!-- <button class="btn btn-primary btn-block w-100 coustom-btn" id="twilio-msg-btn">
+            <i class="bi bi-chat-dots"></i> Twilio Message
+        </button><br> -->
+
+        <!-- NEW: Voice Clone Button -->
+        <button class="btn btn-primary btn-block w-100 coustom-btn" id="voice-btn">
+            <i class="bi bi-mic-fill"></i> Voice Clone
+        </button><br>
+       
+        <button class="btn btn-primary btn-block w-100 coustom-btn" id="user-settings-btn">
+            <i class="bi bi-sliders"></i> User Settings
+        </button><br>
+       
+        <button class="btn btn-primary btn-block w-100 coustom-btn" onclick="logoutUser()">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+    </div>
+
+    <!-- ==================== ALL YOUR EXISTING CONTENT CONTAINERS (unchanged) ==================== -->
+    <!-- Dashboard, Prompt, Send Call, Bulk Call, Call Logs, User Settings, etc. -->
+    <!-- ... (keep everything you already have here) ... -->
+
+    <!-- NEW VOICE CLONE CONTAINER -->
+    <div class="content" id="voice-clone-container" style="display:none;">
+        <h3>Voice Clone</h3>
+        <p style="font-size:14px; color:#555;">
+            Upload a clear voice sample (WAV format, 10–60 seconds) to clone your voice using ElevenLabs.
+        </p>
+        <form id="voice-clone-form" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="voice-name" class="form-label">Voice Name</label>
+                <input type="text" class="form-control" id="voice-name" placeholder="e.g. My Custom Voice" required>
+            </div>
+            <div class="mb-3">
+                <label for="voice-file" class="form-label">Upload WAV File</label>
+                <input type="file" class="form-control" id="voice-file" accept=".wav" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Clone Voice</button>
+        </form>
+        <div id="clone-result" class="mt-3"></div>
+    </div>
+
+
+    <div class="content" id="dashboard-container" style="display:none;">
+      <h4>Dashboard</h4>
+
+      <div class="row g-2 mb-3">
+        <div class="col-md-2">
+          <label for="month-selector-dashboard" class="form-label">Month</label>
+          <input type="month" id="month-selector-dashboard" class="form-control">
+        </div>
+        <div class="col-md-2">
+          <label for="date-selector-dashboard" class="form-label">Date</label>
+          <input type="date" id="date-selector-dashboard" class="form-control">
+        </div>
+        <div class="col-md-3">
+          <label for="phone-filter-dashboard" class="form-label">Phone Filter</label>
+          <input type="text" id="phone-filter-dashboard" class="form-control" placeholder="+923... or digits">
+        </div>
+        <div class="col-md-2">
+          <label for="direction-filter-dashboard" class="form-label">Direction</label>
+          <select id="direction-filter-dashboard" class="form-select">
+            <option value="all" selected>All</option>
+            <option value="inbound">Inbound</option>
+            <option value="outbound-api">Outbound</option>
+          </select>
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="sip-only-dashboard" checked>
+            <label class="form-check-label" for="sip-only-dashboard">SIP</label>
+          </div>
+        </div>
+        <div class="col-md-2 d-flex align-items-end gap-2">
+          <button class="btn btn-primary w-50" id="apply-dashboard-filters-btn">Apply</button>
+          <button class="btn btn-outline-secondary w-50" id="clear-dashboard-filters-btn">Clear</button>
+        </div>
+      </div>
+    
+      <div id="dashboard-loading-spinner" style="display:none;"></div>
+    
+      <div class="row row-cols-1 row-cols-md-4 g-4 mt-4">
+
+        <div class="col">
+          <div class="card h-100 text-white">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+              <i class="bi bi-bar-chart-fill" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2">Total Calls</h5>
+              <p class="card-text fs-4" id="total-calls">0</p>
+            </div>
+          </div>
+        </div>
+      
+        <div class="col">
+          <div class="card h-100 text-white">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+              <i class="bi bi-arrow-down-left-circle-fill" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2">Inbound Calls</h5>
+              <p class="card-text fs-4" id="inbound-calls">0</p>
+            </div>
+          </div>
+        </div>
+      
+        <div class="col">
+          <div class="card h-100 text-white">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+              <i class="bi bi-arrow-up-right-circle-fill" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2">Outbound Calls</h5>
+              <p class="card-text fs-4" id="outbound-calls">0</p>
+            </div>
+          </div>
+        </div>
+      
+        <div class="col">
+          <div class="card h-100 text-white">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+              <i class="bi bi-clock-history" style="font-size: 2rem;"></i>
+              <h5 class="card-title mt-2">Avg. Duration</h5>
+              <p class="card-text fs-4" id="average-duration">0 min</p>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card p-3 text-white">
+            <h5 class="card-title">Call Type Breakdown</h5>
+            <canvas id="callTypeChart" height="200"></canvas>
+          </div>
+        </div>
+      
+        <div class="col-md-6">
+          <div class="card p-3 text-white">
+            <h5 class="card-title">Daily Call Trend</h5>
+            <canvas id="callTrendChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+    </div>
+    
+
+
+<!-- alongside your other <div class="content" id="…"> -->
+    <div class="content" id="twilio-message-container" style="display:none;">
+        <h4>Twilio SMS Template</h4>
+        <form id="twilio-msg-form">
+          <div class="mb-3">
+            <label for="twilio-msg-text" class="form-label">SMS Content</label>
+            <textarea class="form-control" id="twilio-msg-text" rows="6"></textarea>
+          </div>
+          <button type="button" class="btn btn-primary" id="save-twilio-msg-btn">
+            Save Changes
+          </button>
+        </form>
+      </div>
+      
+      
+
+      <div class="content" id="prompt-container" style="display:none;">
+        <h4>Create Agent</h4>
+        <!-- Prompt Form -->
+        <form id="prompt-form" onsubmit="addPrompt(event)">
+          <div class="mb-3">
+            <label for="prompt-name" class="form-label">Agent Name</label>
+            <input type="text" class="form-control" id="prompt-name" placeholder="Enter agent name" required>
+          </div>
+          <div class="mb-3">
+            <label for="prompt-content" class="form-label">Prompt</label>
+            <textarea class="form-control" id="prompt-content" placeholder="Enter prompt content" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="language-selection" class="form-label">Language</label>
+            <select class="form-select" id="language-selection" required>
+              <option value="" disabled selected>Select Language</option>
+              <option value="en-US">English (US)</option>
+              <option value="en-GB">English (UK)</option>
+              <option value="sv">Swedish</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="voice-selection" class="form-label">Voice</label>
+            <select class="form-select" id="voice-selection" required>
+              <option value="" disabled selected>Select Voice</option>
+            </select>
+            <div id="voice-preview-container" class="mt-3"></div>
+          </div>
+          <div class="mb-3">
+            <label for="model-selection" class="form-label">LLM Model</label>
+            <select class="form-select" id="model-selection" required>
+              <option value="" disabled selected>Select Model</option>
+              <option value="claude-haiku-4-5">claude-haiku-4-5</option>
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="gpt-4o">gpt-4o</option>
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-4.1">gpt-4.1</option>
+              <option value="gpt-5-chat-latest">gpt-5-chat-latest</option>
+              <option value="gpt-5.1-chat-latest">gpt-5.1-chat-latest</option>
+              <option value="gpt-5.2-chat-latest">gpt-5.2-chat-latest</option>
+              <option value="gpt-5">gpt-5</option>
+              <option value="gpt-5.1">gpt-5.1</option>
+              <option value="gpt-5.2">gpt-5.2</option>
+              <option value="gpt-5-mini">gpt-5-mini</option>
+              <option value="gpt-5-nano">gpt-5-nano</option>
+              <option value="gpt-4o-mini-realtime-preview">gpt-4o-mini-realtime-preview</option>
+              <option value="gpt-4o-mini-realtime-preview-2024-12-17">gpt-4o-mini-realtime-preview-2024-12-17</option>
+              <option value="gpt-realtime">gpt-realtime</option>
+              <option value="gpt-realtime-mini">gpt-realtime-mini</option>
+              <option value="gpt-realtime-2025-08-28">gpt-realtime-2025-08-28</option>
+              <option value="gpt-realtime-mini-2025-10-06">gpt-realtime-mini-2025-10-06</option>
+              <option value="gpt-realtime-mini-2025-12-15">gpt-realtime-mini-2025-12-15</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="from-number" class="form-label">From Number</label>
+            <select class="form-select" id="from-number" required>
+                <option value="" disabled>Select From Number</option>
+                <option value="sip:+923463952555@147.79.67.103" selected>sip:+923463952555@147.79.67.103</option>
+            </select>
+        </div>
+
+             <div class="mb-3">
+              <label for="transfer-number" class="form-label">Transfer Number</label>
+              <select class="form-select" id="transfer-number" required>
+                  <option value="" disabled selected>Select Transfer Number</option>
+              </select>
+             </div>
+
+             <div class="mb-3">
+              <label for="email-tool" class="form-label">Email Tool</label>
+              <select class="form-select" id="email-tool">
+                  <option value="none" selected>Disabled</option>
+                  <option value="lead_email">Lead Follow-up Email</option>
+              </select>
+             </div>
+
+             <div class="mb-3">
+             <label for="agent-type" class="form-label">Agent Type</label>
+              <select class="form-select" id="agent-type" required>
+                  <option value="" disabled selected>Select Agent Type</option>
+                  <option value="inbound">Inbound</option>
+                  <option value="outbound">Outbound</option>
+              </select>
+          </div>
+          <div class="mb-3 form-check">
+            <input class="form-check-input" type="checkbox" id="human-speaks-first">
+            <label class="form-check-label" for="human-speaks-first">Human speaks first</label>
+          </div>
+          <button type="submit" class="btn btn-primary" id="create-btn">Create</button>
+          <!-- Update button will be dynamically inserted here -->
+        </form>
+        <hr>
+        <!-- Grid of Prompt Cards -->
+        <div id="prompts-list" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          <!-- Prompt cards will be dynamically inserted here -->
+        </div>
+      </div>
+
+
+<div class="content" id="inbound-container" style="display: none;">
+    <h4>Inbound Calling</h4>
+
+
+
+        <!-- Inbound Settings Section -->
+<div class="mb-3">
+    <label for="inbound-twilio-number" class="form-label">Select Twilio Number</label>
+    <select class="form-select" id="inbound-twilio-number" required>
+      <option value="" disabled selected>Select Twilio Number</option>
+      <!-- The options will be populated dynamically using the /get_twilio_numbers endpoint -->
+    </select>
+  </div>
+  
+    
+    <!-- Agent Options and System Message for Inbound -->
+    <div class="mb-3">
+      <label for="inbound-agent-options" class="form-label">Agent</label>
+      <select id="inbound-agent-options" class="form-select mb-2"></select>
+      <!-- This textarea is used for the agent's prompt in inbound calls -->
+      <textarea class="form-control" id="inbound-agent-system-message" placeholder="you can only select an agent"></textarea>
+    </div>
+    
+    <!-- Initial Message -->
+    
+    <!-- Voice Selection Dropdown -->
+    <div class="mb-3">
+      <label for="inbound-voice-selection" class="form-label">Select Voice</label>
+      <select class="form-select" id="inbound-voice-selection" required>
+        <option value="" disabled selected>Select Voice</option>
+        <!-- Options will be populated dynamically from the ElevenLabs API -->
+      </select>
+      <div id="inbound-voice-preview-container" class="mt-3"></div>
+    </div>
+    
+    <!-- Language Selection Dropdown -->
+    <div class="mb-3">
+      <label for="inbound-language-selection" class="form-label">Select Language</label>
+      <select class="form-select" id="inbound-language-selection" required>
+        <option value="" disabled selected>Select Language</option>
+        <option value="en-US">English (US)</option>
+        <option value="en-GB">English (UK)</option>
+        <option value="sv">Swedish</option>
+        <!-- Add additional languages as needed -->
+      </select>
+    </div>
+    
+    <!-- Transfer Number Input -->
+    <div class="mb-3">
+      <label for="inbound-transfer-number" class="form-label">Transfer Number</label>
+      <select class="form-select" id="inbound-transfer-number" required>
+          <option value="" disabled selected>Select Transfer Number</option>
+      </select>
+    </div>
+    
+    <!-- Save Inbound Settings Button -->
+    <button class="btn btn-primary" onclick="updateInboundSettings()">Save Inbound Settings</button>
+  </div>
+  
+  
+
+
+
+
+    <div class="content" id="user-settings-container" style="display:none;">
+        <h4>User Settings</h4>
+        <form id="settings-form" onsubmit="saveUserSettings(event)">
+            <label for="twilio_sid" class="form-label">Twilio SID</label>
+            <input type="text" class="form-control" id="twilio_sid" required>
+    
+            <label for="twilio_token" class="form-label">Twilio Token</label>
+            <input type="text" class="form-control" id="twilio_token" required>
+    
+            <label for="openai_key" class="form-label">OpenAI API Key</label>
+            <input type="text" class="form-control" id="openai_key" required>
+
+            <label for="elevenlabs_key" class="form-label">ElevenLabs API Key</label>
+            <input type="text" class="form-control" id="elevenlabs_key" required>
+
+            <label for="email_sender" class="form-label mt-3">Sender Email</label>
+            <input type="email" class="form-control" id="email_sender" placeholder="sender@company.com">
+
+            <label for="email_recipient" class="form-label mt-3">Recipient Email</label>
+            <input type="email" class="form-control" id="email_recipient" placeholder="recipient@company.com">
+
+            <label for="transfer_number" class="form-label mt-3">Transfer Number</label>
+            <select class="form-select" id="transfer_number">
+                <option value="" disabled selected>Select Transfer Number</option>
+            </select>
+
+            <label for="system_message" class="form-label mt-3">Global System Prompt</label>
+            <textarea class="form-control" id="system_message" rows="6" placeholder="Enter the system-wide instructions that every agent should follow."></textarea>
+            <small class="text-muted">
+                These global instructions are prepended to every agent prompt before it is sent to the LLM,
+                so edits here instantly change the baseline tone for every caller.
+            </small>
+    
+            <button type="submit" class="btn btn-primary mt-3">Save Settings</button>
+        </form>
+
+        <hr>
+        <h5>Manage Transfer Numbers</h5>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="transfer-name" placeholder="Enter Name" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="transfer-phone" placeholder="Enter Phone Number (+1XXXXXXXXXX)" required>
+        </div>
+        <button class="btn btn-primary" id="save-transfer-number-btn" onclick="saveTransferNumber()">Save Number</button>
+
+        <div id="saved-numbers-container" class="container mt-3" style="display:none;">
+            <h5>Saved Transfer Numbers</h5>
+            <table class="table table-striped" id="saved-numbers-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    
+
+
+
+    <!-- Call Logs Section with Month Selector -->
+    <div class="content" id="call-logs-container" style="display:none;">
+        <div class="row g-2 mb-3">
+            <div class="col-md-3">
+                <label for="month-selector-calllogs" class="form-label">Month</label>
+                <input type="month" id="month-selector-calllogs" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="date-selector-calllogs" class="form-label">Date</label>
+                <input type="date" id="date-selector-calllogs" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="phone-filter-calllogs" class="form-label">Phone Filter</label>
+                <input type="text" id="phone-filter-calllogs" class="form-control" placeholder="+923... or digits">
+            </div>
+            <div class="col-md-3 d-flex align-items-end gap-2">
+                <button class="btn btn-primary w-50" id="apply-calllog-filters-btn">Apply</button>
+                <button class="btn btn-outline-secondary w-50" id="clear-calllog-filters-btn">Clear</button>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" style="display:none;" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <div class="container">
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <!-- <th>Call SID</th> -->
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                        <th>Timestamp</th>
+                        <!-- <th>Actions</th> -->
+                        <th>Actions</th> <!-- New column -->
+                    </tr>
+                </thead>
+                <tbody id="call-logs-table">
+                    <!-- Call log rows will be populated dynamically here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <button class="btn btn-outline-primary btn-sm" id="call-logs-prev-btn">Previous</button>
+            <div id="call-logs-page-info" class="small text-muted">Page 1</div>
+            <button class="btn btn-outline-primary btn-sm" id="call-logs-next-btn">Next</button>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="recordingModal" tabindex="-1" aria-labelledby="recordingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recordingModalLabel">Call Recording</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopPlayback()"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <audio id="recordingAudio" controls></audio>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="stopPlayback()">Close Listening</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="transcriptModal" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl"> <!-- Extra large modal for better viewing -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transcriptModalLabel">
+                        <i class="bi bi-chat-text"></i> Call Transcript
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background-color: #f9f9f9; padding: 20px;">
+                    <div id="transcriptContent" 
+                         style="white-space: pre-wrap; overflow-y: auto; max-height: 70vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 1rem; line-height: 1.5;">
+                        <!-- Transcript content will be dynamically inserted here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+   
+
+
+    <div class="content">
+        <div id="send-call-container" class="container">
+          <h4>Send Call</h4>
+        
+          <!-- Agent picker -->
+          <div class="mb-3">
+            <label for="agent-options" class="form-label">Agent</label>
+            <select id="agent-options" class="form-select" required>
+              <option value="" disabled selected>Select Agent</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        
+          <!-- Phone Number -->
+          <div class="mb-3">
+            <label for="phone-number" class="form-label">Phone Number</label>
+            <input type="text"
+                   class="form-control"
+                   id="phone-number"
+                   placeholder="Enter Phone Number (+1XXXXXXXXXX)"
+                   required>
+          </div>
+        
+          <button
+  class="btn btn-primary"
+  id="start-call-btn"
+  onclick="startCall()">
+  Start Call
+</button>
+
+        </div>
+        
+
+        <!-- Call Logs -->
+        <div id="call-logs-container" class="container mt-5" style="display:none;">
+            <h4>Call Logs</h4>
+            <div id="call-logs"></div>
+            <div id="transcript-display" class="transcript mt-3" style="display:none;">
+                <h4>Transcript for <span id="selected-call-sid"></span></h4>
+                <div id="transcript"></div>
+            </div>
+        </div>
+
+        <div id="bulk-call-container" class="container" style="display:none;">
+          <h4>Bulk Calling</h4>
+        
+          <!-- Agent picker -->
+          <div class="mb-3">
+            <label for="bulk-agent-options" class="form-label">Agent</label>
+            <select id="bulk-agent-options" class="form-select" required>
+              <option value="" disabled selected>Select Agent</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="campaign-name" class="form-label">Campaign Name</label>
+            <input type="text" class="form-control" id="campaign-name" placeholder="Enter campaign name" required>
+          </div>
+
+          <!-- Number of Calls -->
+<div class="mb-3">
+  <label for="num-calls" class="form-label">Number of Calls</label>
+  <input
+    type="number"
+    class="form-control"
+    id="num-calls"
+    placeholder="Enter how many contacts to dial"
+    min="1"
+    required>
+</div>
+
+        
+          <!-- CSV File Upload -->
+          <div class="mb-3">
+            <label for="csv-file" class="form-label">Upload CSV File</label>
+            <input type="file" class="form-control" id="csv-file" accept=".csv" onchange="handleCSVUpload(event)" required>
+          </div>
+        
+          <!-- CSV Preview -->
+          <div id="csv-preview" class="bulk-upload mt-3" style="display:none;">
+            <h5>
+              Uploaded Contacts
+              <small class="text-muted">(<span id="total-contacts"></span> numbers)</small>
+            </h5>
+           <table class="table table-striped" id="csv-table">
+            <thead>
+                <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            </table>
+
+          </div>
+          <div class="row mt-3">
+  <div class="col-md-4">
+    <input type="text" id="manual-name" class="form-control" placeholder="Name">
+  </div>
+  <div class="col-md-4">
+    <input type="text" id="manual-phone" class="form-control" placeholder="+1234567890">
+  </div>
+  <div class="col-md-4">
+    <button class="btn btn-success w-100" onclick="addManualContact()">
+      ➕ Add Number
+    </button>
+  </div>
+</div>
+
+        
+          <button class="btn btn-primary mt-3" id="start-bulk-call-btn">Start Bulk Calls</button>
+
+          <div class="card mt-3" id="campaign-status-card" style="display:none;">
+            <div class="card-body">
+              <h5 class="card-title">Campaign Status</h5>
+              <p class="mb-2">Campaign ID: <span id="campaign-id">-</span></p>
+              <div class="row">
+                <div class="col-md-4">Total: <strong id="campaign-total">0</strong></div>
+                <div class="col-md-4">Initiated: <strong id="campaign-initiated">0</strong></div>
+                <div class="col-md-4">Remaining: <strong id="campaign-remaining">0</strong></div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-4">Success: <strong id="campaign-success">0</strong></div>
+                <div class="col-md-4">Declined: <strong id="campaign-declined">0</strong></div>
+                <div class="col-md-4">Failed: <strong id="campaign-failed">0</strong></div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-4">Active: <strong id="campaign-active">0</strong></div>
+                <div class="col-md-4">Answered: <strong id="campaign-answered">0</strong></div>
+                <div class="col-md-4">Transferred: <strong id="campaign-transferred">0</strong></div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-4">In Progress: <strong id="campaign-in-progress">0</strong></div>
+                <div class="col-md-4">Completion: <strong id="campaign-completion">0%</strong></div>
+                <div class="col-md-4">Status: <strong id="campaign-status">-</strong></div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12">
+                  <canvas id="campaignMetricsChart" height="120"></canvas>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12 d-flex gap-2">
+                  <button class="btn btn-outline-primary btn-sm" type="button" onclick="exportCampaignResults()">
+                    Export Current Campaign CSV
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3" id="campaign-history-card" style="display:none;">
+            <div class="card-body">
+              <h5 class="card-title">Campaign Analytics</h5>
+              <div class="row mt-2 g-2">
+                <div class="col-md-8">
+                  <input type="text" id="campaign-search-input" class="form-control" placeholder="Search campaign by name, id, agent, status">
+                </div>
+                <div class="col-md-4 d-grid">
+                  <button class="btn btn-outline-secondary btn-sm" type="button" onclick="searchCampaignHistory()">
+                    Search Campaigns
+                  </button>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-12">
+                  <canvas id="campaignOverviewChart" height="120"></canvas>
+                </div>
+              </div>
+              <div class="table-responsive mt-3">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>Campaign ID</th>
+                      <th>Name</th>
+                      <th>Status</th>
+                      <th>Total</th>
+                      <th>Active</th>
+                      <th>Failed</th>
+                      <th>Answered</th>
+                      <th>Transferred</th>
+                      <th>Completion</th>
+                      <th>Created</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="campaign-history-table-body"></tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button" id="campaign-prev-btn" onclick="changeCampaignPage(-1)">Previous</button>
+                <span id="campaign-page-label" class="text-muted small">Page 1</span>
+                <button class="btn btn-outline-secondary btn-sm" type="button" id="campaign-next-btn" onclick="changeCampaignPage(1)">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3" id="campaign-detail-card" style="display:none;">
+            <div class="card-body">
+              <h5 class="card-title">Campaign Details</h5>
+              <p class="mb-2">Campaign: <strong id="campaign-detail-name">-</strong> (<span id="campaign-detail-id">-</span>)</p>
+              <div class="row mt-2">
+                <div class="col-md-3">Total: <strong id="campaign-detail-total">0</strong></div>
+                <div class="col-md-3">Answered: <strong id="campaign-detail-answered">0</strong></div>
+                <div class="col-md-3">Transferred: <strong id="campaign-detail-transferred">0</strong></div>
+                <div class="col-md-3">Failed: <strong id="campaign-detail-failed">0</strong></div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-6">
+                  <input type="text" id="campaign-detail-search" class="form-control" placeholder="Search by name, phone, result">
+                </div>
+                <div class="col-md-3 d-grid">
+                  <button class="btn btn-outline-secondary btn-sm" type="button" onclick="searchSelectedCampaignDetails()">Search Details</button>
+                </div>
+                <div class="col-md-3 d-grid">
+                  <button class="btn btn-outline-primary btn-sm" type="button" onclick="exportCampaignResults(selectedCampaignId)">Download CSV</button>
+                </div>
+              </div>
+              <div class="table-responsive mt-3">
+                <table class="table table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Phone</th>
+                      <th>Result</th>
+                      <th>Status</th>
+                      <th>Answered</th>
+                      <th>Transferred</th>
+                      <th>Duration(s)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="campaign-detail-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+          
+
+
+    <!-- Sidebar and content containers omitted for brevity -->
+
+    <div class="content" id="collected-info-container" style=" margin:auto; display:none; padding: 20px;">
+        <h4 style="text-align: center; margin-bottom: 20px;">Appointment</h4>
+
+        <!-- Month Selector for Filtering -->
+        <div class="mb-3">
+            <label for="month-selector" class="form-label">Select Month</label>
+            <input type="month" id="month-selector" class="form-control" onchange="fetchCollectedInfo()">
+        </div>
+
+        <div id="collected-info-loading" style="display:none; margin-left: 10px;" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Created At</th>
+                </tr>
+                
+            </thead>
+            <tbody id="collected-info-table">
+                <!-- Data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- <div class="modal fade" id="summaryModal" tabindex="-1" aria-labelledby="summaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="summaryModalLabel">Summary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="summaryContent">
+                    Summary will be dynamically inserted here
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    
+
+        
+        
+
+
+        <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Global Variables
+    let csvData = [];
+    let loadedPrompts = [];
+    let currentPromptId = null;
+    let callTypeChart = null;
+    let callTrendChart = null;
+    let chartInstance = null;
+    let campaignMetricsChart = null;
+    let campaignOverviewChart = null;
+    let currentCampaignId = null;
+    let campaignPoller = null;
+    let campaignHistoryPage = 1;
+    const campaignHistoryPageSize = 10;
+    let campaignHistoryQuery = '';
+    let selectedCampaignId = null;
+    let selectedCampaignDetailsQuery = '';
+    let callLogsPage = 1;
+    const callLogsPageSize = 20;
+
+    // === Show Container (Centralized View Switcher) ===
+    function showContainer(containerId) {
+        const containers = [
+            'send-call-container', 'call-logs-container', 'bulk-call-container',
+            'user-settings-container', 'collected-info-container', 'prompt-container',
+            'inbound-container', 'twilio-message-container', 'dashboard-container',
+            'voice-clone-container'
+        ];
+        containers.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        const selected = document.getElementById(containerId);
+        if (selected) selected.style.display = 'block';
+
+        // Load data for specific sections
+        if (containerId === 'prompt-container') {
+            fetchPrompts();
+            populateDropdowns();
+        }
+        if (containerId === 'twilio-message-container') loadTwilioMessage();
+        if (containerId === 'send-call-container' || containerId === 'bulk-call-container') fetchAgentPrompts();
+        if (containerId === 'bulk-call-container') fetchCampaignsStatus();
+        if (containerId === 'dashboard-container') {
+            const monthInput = document.getElementById('month-selector-dashboard');
+            if (!monthInput.value) monthInput.value = new Date().toISOString().slice(0, 7);
+            fetchDashboardStats();
+        }
+        if (containerId === 'inbound-container') {
+            loadInboundSettings();
+            loadInboundVoices();
+            fetchInboundAgentPrompts();
+            loadInboundTwilioNumbers();
+        }
+        if (containerId === 'collected-info-container') fetchCollectedInfo();
+        if (containerId === 'call-logs-container') fetchCallLogs();
+    }
+    // === CSV Upload & Preview ===
+    async function fetchCurrentFile() {
+        try {
+            const response = await fetch('/read_csv/');
+            const data = await response.json();
+
+            if (!data.error) {
+                csvData = data.contacts || [];
+                renderCSVTable(); // ✅ single source of rendering
+            } else {
+                csvData = [];
+                document.getElementById('csv-preview').style.display = 'none';
+            }
+        } catch (err) {
+            console.error('Error loading CSV:', err);
+        }
+    }
+
+
+    function handleCSVUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append('file', file);
+        fetch('/upload_csv/', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(d => {
+                if (d.message === 'File uploaded successfully') {
+                    fetchCurrentFile();
+                } else {
+                    alert('Upload failed: ' + (d.error || 'Unknown error'));
+                }
+            })
+            .catch(err => console.error('Upload error:', err));
+    }
+
+    function updateCampaignStatusCard(data) {
+        if (!data) return;
+        document.getElementById('campaign-status-card').style.display = 'block';
+        const activeCalls = data.active_calls ?? data.in_progress ?? 0;
+        const failedTotal = data.failed_total ?? ((data.failed_initiate ?? 0) + (data.declined ?? 0));
+        const answered = data.answered ?? 0;
+        const transferred = data.transferred ?? 0;
+        document.getElementById('campaign-id').innerText = data.id || data.campaign_id || '-';
+        document.getElementById('campaign-total').innerText = data.total_targets ?? 0;
+        document.getElementById('campaign-initiated').innerText = data.initiated ?? 0;
+        document.getElementById('campaign-remaining').innerText = data.remaining ?? 0;
+        document.getElementById('campaign-success').innerText = data.success ?? 0;
+        document.getElementById('campaign-declined').innerText = data.declined ?? 0;
+        document.getElementById('campaign-failed').innerText = failedTotal;
+        document.getElementById('campaign-active').innerText = activeCalls;
+        document.getElementById('campaign-answered').innerText = answered;
+        document.getElementById('campaign-transferred').innerText = transferred;
+        document.getElementById('campaign-in-progress').innerText = data.in_progress ?? activeCalls;
+        document.getElementById('campaign-completion').innerText = `${data.completion_pct ?? 0}%`;
+        document.getElementById('campaign-status').innerText = data.status || '-';
+        renderCampaignMetricsChart({
+            active: Number(activeCalls) || 0,
+            failed: Number(failedTotal) || 0,
+            answered: Number(answered) || 0,
+            transferred: Number(transferred) || 0,
+        });
+    }
+
+    function renderCampaignMetricsChart(metrics) {
+        const ctx = document.getElementById('campaignMetricsChart')?.getContext('2d');
+        if (!ctx) return;
+        if (campaignMetricsChart) campaignMetricsChart.destroy();
+        campaignMetricsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Active', 'Failed', 'Answered', 'Transferred'],
+                datasets: [{
+                    label: 'Campaign Metrics',
+                    data: [
+                        metrics.active || 0,
+                        metrics.failed || 0,
+                        metrics.answered || 0,
+                        metrics.transferred || 0
+                    ],
+                    backgroundColor: ['#f39c12', '#e74c3c', '#06CC64', '#007bff']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+            }
+        });
+    }
+
+    function _formatCampaignCreatedAt(value) {
+        if (!value) return '-';
+        const normalized = String(value)
+            .replace(' ', 'T')
+            .replace(/\+00:?00$/, 'Z')
+            .replace(/\+00$/, 'Z');
+        const parsed = new Date(normalized);
+        if (Number.isNaN(parsed.getTime())) return value;
+        return parsed.toLocaleString();
+    }
+
+    function renderCampaignOverviewChart(campaigns) {
+        const ctx = document.getElementById('campaignOverviewChart')?.getContext('2d');
+        if (!ctx) return;
+        if (campaignOverviewChart) campaignOverviewChart.destroy();
+        const labels = campaigns.map((item) => String(item.id || '').slice(0, 8));
+        campaignOverviewChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Answered',
+                        data: campaigns.map((item) => Number(item.answered || 0)),
+                        backgroundColor: '#06CC64'
+                    },
+                    {
+                        label: 'Transferred',
+                        data: campaigns.map((item) => Number(item.transferred || 0)),
+                        backgroundColor: '#007bff'
+                    },
+                    {
+                        label: 'Failed',
+                        data: campaigns.map((item) => Number(item.failed_total || 0)),
+                        backgroundColor: '#e74c3c'
+                    },
+                    {
+                        label: 'Active',
+                        data: campaigns.map((item) => Number(item.active_calls || item.in_progress || 0)),
+                        backgroundColor: '#f39c12'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+
+    function renderCampaignHistoryTable(campaigns) {
+        const tbody = document.getElementById('campaign-history-table-body');
+        if (!tbody) return;
+        if (!campaigns.length) {
+            tbody.innerHTML = '<tr><td colspan="11" class="text-center text-muted">No campaign data yet</td></tr>';
+            return;
+        }
+        tbody.innerHTML = campaigns.map((item) => `
+            <tr style="cursor:pointer" onclick="openCampaignDetails('${item.id || ''}')">
+                <td>${item.id || '-'}</td>
+                <td>${item.campaign_name || '-'}</td>
+                <td>${item.status || '-'}</td>
+                <td>${item.total_targets ?? 0}</td>
+                <td>${item.active_calls ?? item.in_progress ?? 0}</td>
+                <td>${item.failed_total ?? 0}</td>
+                <td>${item.answered ?? 0}</td>
+                <td>${item.transferred ?? 0}</td>
+                <td>${item.completion_pct ?? 0}%</td>
+                <td>${_formatCampaignCreatedAt(item.created_at)}</td>
+                <td>
+                    <button class="btn btn-outline-primary btn-sm" type="button" onclick="event.stopPropagation(); exportCampaignResults('${item.id || ''}')">
+                        Export CSV
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function exportCampaignResults(campaignId = null) {
+        const id = campaignId || currentCampaignId;
+        if (!id) {
+            alert('No campaign selected yet.');
+            return;
+        }
+        const query = id === selectedCampaignId ? selectedCampaignDetailsQuery : '';
+        const params = new URLSearchParams({ q: query || '' });
+        const url = `/campaign_results_export/${encodeURIComponent(id)}?${params.toString()}`;
+        window.open(url, '_blank');
+    }
+
+    function updateCampaignHistoryPagination(pagination) {
+        const pageLabel = document.getElementById('campaign-page-label');
+        const prevBtn = document.getElementById('campaign-prev-btn');
+        const nextBtn = document.getElementById('campaign-next-btn');
+        const page = pagination?.page ?? 1;
+        const totalPages = pagination?.total_pages ?? 1;
+        if (pageLabel) pageLabel.innerText = `Page ${page} of ${totalPages}`;
+        if (prevBtn) prevBtn.disabled = !pagination?.has_prev;
+        if (nextBtn) nextBtn.disabled = !pagination?.has_next;
+    }
+
+    async function fetchCampaignsStatus() {
+        try {
+            const params = new URLSearchParams({
+                page: String(campaignHistoryPage),
+                page_size: String(campaignHistoryPageSize),
+                q: campaignHistoryQuery || '',
+            });
+            const res = await fetch(`/campaigns_status?${params.toString()}`);
+            if (!res.ok) return;
+            const json = await res.json();
+            const campaigns = Array.isArray(json.items) ? json.items : [];
+            const historyCard = document.getElementById('campaign-history-card');
+            if (historyCard) historyCard.style.display = 'block';
+            renderCampaignHistoryTable(campaigns);
+            updateCampaignHistoryPagination(json.pagination || {});
+            if (campaigns.length) {
+                renderCampaignOverviewChart(campaigns);
+            } else if (campaignOverviewChart) {
+                campaignOverviewChart.destroy();
+                campaignOverviewChart = null;
+            }
+        } catch (err) {
+            console.error('Failed to fetch campaigns status:', err);
+        }
+    }
+
+    function searchCampaignHistory() {
+        const input = document.getElementById('campaign-search-input');
+        campaignHistoryQuery = (input?.value || '').trim();
+        campaignHistoryPage = 1;
+        fetchCampaignsStatus();
+    }
+
+    function changeCampaignPage(step) {
+        campaignHistoryPage = Math.max(1, campaignHistoryPage + Number(step || 0));
+        fetchCampaignsStatus();
+    }
+
+    async function fetchCampaignDetails() {
+        if (!selectedCampaignId) return;
+        try {
+            const params = new URLSearchParams({
+                q: selectedCampaignDetailsQuery || '',
+                page: '1',
+                page_size: '200',
+            });
+            const res = await fetch(`/campaign_results/${encodeURIComponent(selectedCampaignId)}?${params.toString()}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            const detailCard = document.getElementById('campaign-detail-card');
+            if (detailCard) detailCard.style.display = 'block';
+            document.getElementById('campaign-detail-id').innerText = data.campaign_id || '-';
+            document.getElementById('campaign-detail-name').innerText = data.campaign_name || '-';
+            document.getElementById('campaign-detail-total').innerText = data.analytics?.total ?? 0;
+            document.getElementById('campaign-detail-answered').innerText = data.analytics?.answered ?? 0;
+            document.getElementById('campaign-detail-transferred').innerText = data.analytics?.transferred ?? 0;
+            document.getElementById('campaign-detail-failed').innerText = data.analytics?.failed ?? 0;
+            const tbody = document.getElementById('campaign-detail-table-body');
+            const items = Array.isArray(data.items) ? data.items : [];
+            if (!items.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No contacts found</td></tr>';
+                return;
+            }
+            tbody.innerHTML = items.map((item) => `
+                <tr>
+                    <td>${item.name || '-'}</td>
+                    <td>${item.phone_number || '-'}</td>
+                    <td>${item.result || '-'}</td>
+                    <td>${item.status || '-'}</td>
+                    <td>${item.answered ? 'Yes' : 'No'}</td>
+                    <td>${item.transferred ? 'Yes' : 'No'}</td>
+                    <td>${item.duration_sec ?? 0}</td>
+                </tr>
+            `).join('');
+        } catch (err) {
+            console.error('Failed to fetch campaign details:', err);
+        }
+    }
+
+    function openCampaignDetails(campaignId) {
+        if (!campaignId) return;
+        selectedCampaignId = campaignId;
+        selectedCampaignDetailsQuery = '';
+        const searchInput = document.getElementById('campaign-detail-search');
+        if (searchInput) searchInput.value = '';
+        fetchCampaignDetails();
+    }
+
+    function searchSelectedCampaignDetails() {
+        const input = document.getElementById('campaign-detail-search');
+        selectedCampaignDetailsQuery = (input?.value || '').trim();
+        fetchCampaignDetails();
+    }
+
+    async function fetchCampaignStatus() {
+        if (!currentCampaignId) return;
+        try {
+            const res = await fetch(`/campaign_status/${currentCampaignId}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            updateCampaignStatusCard(data);
+            fetchCampaignsStatus();
+            if (selectedCampaignId && selectedCampaignId === currentCampaignId) {
+                fetchCampaignDetails();
+            }
+            if (data.status === 'completed') {
+                clearInterval(campaignPoller);
+                campaignPoller = null;
+            }
+        } catch (err) {
+            console.error('Failed to fetch campaign status:', err);
+        }
+    }
+
+    function startCampaignPolling(campaignId) {
+        currentCampaignId = campaignId;
+        if (campaignPoller) clearInterval(campaignPoller);
+        fetchCampaignStatus();
+        campaignPoller = setInterval(fetchCampaignStatus, 2000);
+    }
+
+    // === Start Bulk Calls ===
+    async function startBulkCalls() {
+        const agentSel = document.getElementById('bulk-agent-options');
+        const agentOpt = agentSel.options[agentSel.selectedIndex];
+        if (!agentOpt?.value) return alert('Please select an agent.');
+        const campaignName = (document.getElementById('campaign-name')?.value || '').trim();
+        if (!campaignName) return alert('Please enter a campaign name.');
+
+        const raw = document.getElementById('num-calls').value.trim();
+        const n = parseInt(raw, 10);
+        if (!n || n < 1) return alert('Please enter a valid number of calls.');
+        if (n > csvData.length) return alert(`Only ${csvData.length} contacts available.`);
+
+        const toNumbers = csvData.slice(0, n).map(c => c.phone_number);
+        const contacts = csvData.slice(0, n).map(c => ({
+            name: c.name || '',
+            phone_number: c.phone_number || '',
+        }));
+        const payload = {
+            to_numbers: toNumbers,
+            contacts,
+            campaign_name: campaignName,
+            transfer_number: agentOpt.dataset.transferNumber || "",
+            twilio_number: agentOpt.dataset.fromNumber || "",
+            system_message: agentOpt.dataset.prompt || "",
+            voice: agentOpt.dataset.voice || "",
+            language: agentOpt.dataset.language || "",
+            email_tool: agentOpt.dataset.emailTool || "none",
+            email_recipient: agentOpt.dataset.emailRecipient || "",
+            agent_id: agentOpt.value || "",
+            agent_name: agentOpt.textContent || "",
+            agent_type: agentOpt.dataset.agentType || "",
+            model: agentOpt.dataset.model || "",
+            human_speaks_first: agentOpt.dataset.humanSpeaksFirst === "true"
+        };
+
+        try {
+            const res = await fetch('/start_bulk_calls', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const json = await res.json();
+            if (res.ok) {
+                alert(`Campaign started: ${json.campaign_id}`);
+                startCampaignPolling(json.campaign_id);
+                openCampaignDetails(json.campaign_id);
+                updateCampaignStatusCard({
+                    campaign_id: json.campaign_id,
+                    campaign_name: json.campaign_name || campaignName,
+                    total_targets: json.total_targets,
+                    initiated: json.initiated,
+                    completed: json.completed,
+                    success: json.success,
+                    declined: json.declined,
+                    failed_initiate: json.failed_initiate,
+                    failed_total: json.failed_total ?? 0,
+                    answered: json.answered ?? 0,
+                    transferred: json.transferred ?? 0,
+                    remaining: json.total_targets,
+                    active_calls: json.active_calls ?? 0,
+                    in_progress: json.in_progress ?? 0,
+                    completion_pct: json.completion_pct ?? 0,
+                    status: json.status
+                });
+                csvData.splice(0, n);
+                const tbody = document.querySelector('#csv-table tbody');
+                tbody.innerHTML = csvData.map(c => `<tr><td>${c.name}</td><td>${c.phone_number}</td></tr>`).join('');
+                if (!csvData.length) document.getElementById('csv-preview').style.display = 'none';
+            } else {
+                alert(json.error || 'Bulk call failed.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Network error initiating bulk calls.');
+        }
+    }
+
+    let isCalling = false; // prevent multiple triggers
+
+    // === Start Single Call ===
+    async function startCall(event) {
+        // ✅ Prevent default form submission if button is inside a form
+        if (event) event.preventDefault();
+
+        if (isCalling) return; // prevent multiple clicks
+        isCalling = true;
+
+        const agentSelect = document.getElementById('agent-options');
+        const phoneNumber = document.getElementById('phone-number').value.trim();
+        const startButton = document.getElementById('start-call-btn');
+
+        if (!agentSelect.value) {
+            alert('Please select an agent.');
+            isCalling = false;
+            return;
+        }
+
+        if (!phoneNumber) {
+            alert('Please enter a phone number.');
+            isCalling = false;
+            return;
+        }
+
+        // disable button during call start
+        startButton.disabled = true;
+        startButton.textContent = 'Calling...';
+
+        const opt = agentSelect.options[agentSelect.selectedIndex];
+        const payload = {
+            to_numbers: [phoneNumber],
+            transfer_number: opt.dataset.transferNumber || "",
+            twilio_number: opt.dataset.fromNumber || "",
+            system_message: opt.dataset.prompt || "",
+            voice: opt.dataset.voice || "",
+            language: opt.dataset.language || "",
+            email_tool: opt.dataset.emailTool || "none",
+            email_recipient: opt.dataset.emailRecipient || "",
+            agent_id: opt.value || "",
+            agent_name: opt.textContent || "",
+            agent_type: opt.dataset.agentType || "",
+            model: opt.dataset.model || "",
+            human_speaks_first: opt.dataset.humanSpeaksFirst === "true"
+        };
+
+        try {
+            const res = await fetch('/start_call', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const json = await res.json();
+
+            if (json.results?.length) {
+                alert(`✅ Call started successfully!\nCall SID: ${json.results[0].call_sid}`);
+                document.getElementById('phone-number').value = '';
+                agentSelect.value = '';
+            } else {
+                alert(json.error || 'Call failed.');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Failed to start call.');
+        } finally {
+            // always re-enable button
+            isCalling = false;
+            startButton.disabled = false;
+            startButton.textContent = 'Start Call';
+        }
+    }
+
+    // === Fetch Agent Prompts (Single + Bulk Dropdowns) ===
+    async function fetchAgentPrompts() {
+        try {
+            const res = await fetch('/fetch_prompts');
+            const data = await res.json();
+            loadedPrompts = data;
+            const selects = ['agent-options', 'bulk-agent-options'];
+            selects.forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="" disabled selected>Select Agent</option>';
+                data.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a.id;
+                    opt.textContent = a.name;
+                    opt.dataset.prompt = a.prompt || '';
+                    opt.dataset.fromNumber = a.from_number || '';
+                    opt.dataset.transferNumber = a.transfer_number || '';
+                    opt.dataset.voice = a.voice || '';
+                    opt.dataset.language = a.language || '';
+                    opt.dataset.emailTool = a.email_tool || 'none';
+                    opt.dataset.emailRecipient = a.email_recipient || '';
+                    opt.dataset.agentType = a.agent_type || '';
+                    opt.dataset.model = a.model || '';
+                    opt.dataset.humanSpeaksFirst = a.human_speaks_first ? 'true' : 'false';
+                    sel.appendChild(opt);
+                });
+            });
+        } catch (err) {
+            console.error('Error loading agents:', err);
+        }
+    }
+
+    // === Transfer Numbers ===
+    async function fetchTransferNumbers() {
+        try {
+            const res = await fetch('/get_transfer_numbers');
+            const data = await res.json();
+            const dropdowns = ['transfer-number', 'bulk-transfer-number', 'inbound-transfer-number', 'transfer_number'];
+            dropdowns.forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="" disabled selected>Select Transfer Number</option>';
+                data.numbers?.forEach(n => {
+                    sel.innerHTML += `<option value="${n.phone_number}">${n.name} (${n.phone_number})</option>`;
+                });
+            });
+        } catch (err) {
+            console.error('Error loading transfer numbers:', err);
+        }
+    }
+
+    async function saveTransferNumber() {
+        const name = document.getElementById('transfer-name').value.trim();
+        const phone = document.getElementById('transfer-phone').value.trim();
+        if (!name || !phone) return alert('Name and phone number required.');
+        try {
+            const res = await fetch('/save_transfer_number', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, phone_number: phone })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Transfer number saved!');
+                fetchTransferNumbers();
+                fetchSavedNumbers();
+            } else {
+                alert(data.detail || 'Error saving.');
+            }
+        } catch (err) {
+            alert('Error saving transfer number.');
+        }
+    }
+
+    async function fetchSavedNumbers() {
+        try {
+            const res = await fetch('/get_transfer_numbers');
+            const data = await res.json();
+            const tbody = document.querySelector('#saved-numbers-table tbody');
+            tbody.innerHTML = '';
+            if (data.numbers?.length > 0) {
+                data.numbers.forEach(n => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${n.name}</td>
+                            <td>${n.phone_number}</td>
+                            <td><button class="btn btn-danger btn-sm" onclick="deleteTransferNumber('${n.phone_number}')">Delete</button></td>
+                        </tr>`;
+                });
+                document.getElementById('saved-numbers-container').style.display = 'block';
+            } else {
+                document.getElementById('saved-numbers-container').style.display = 'none';
+            }
+        } catch (err) {
+            console.error('Error loading saved numbers:', err);
+        }
+    }
+
+    async function deleteTransferNumber(phone) {
+        if (!confirm('Delete this transfer number?')) return;
+        try {
+            const res = await fetch(`/delete_transfer_number/${phone}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+                alert('Deleted successfully.');
+                fetchSavedNumbers();
+                fetchTransferNumbers();
+            }
+        } catch (err) {
+            alert('Error deleting.');
+        }
+    }
+
+    // === Twilio Numbers ===
+    async function fetchTwilioNumbers() {
+        try {
+            const res = await fetch('/get_twilio_numbers');
+            const { numbers } = await res.json();
+            const ids = ['twilio-number', 'bulk-twilio-number', 'from-number', 'inbound-twilio-number'];
+            ids.forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="" disabled selected>Select From Number</option>';
+                numbers.forEach(n => {
+                    const opt = document.createElement('option');
+                    opt.value = n.phone_number;
+                    opt.textContent = n.phone_number;
+                    sel.appendChild(opt);
+                });
+            });
+        } catch (err) {
+            console.error('Error loading Twilio numbers:', err);
+        }
+    }
+
+    // === ElevenLabs Voices ===
+    async function fetchElevenLabsVoices() {
+        try {
+            const res = await fetch('/get_elevenlabs_voices');
+            const data = await res.json();
+            const ids = ['voice-selection', 'bulk-voice-selection', 'inbound-voice-selection'];
+            ids.forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option value="" disabled selected>Select Voice</option>';
+                data.voices?.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.voice_id;
+                    opt.textContent = `${v.name} (${v.labels?.gender || 'N/A'}, ${v.labels?.accent || 'N/A'})`;
+                    opt.dataset.audio = v.preview_url || '';
+                    sel.appendChild(opt);
+                });
+            });
+        } catch (err) {
+            console.error('Error loading voices:', err);
+        }
+    }
+
+    function attachVoicePreview(dropdownId, containerId) {
+        document.getElementById(dropdownId)?.addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            const url = opt.dataset.audio;
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            if (url) {
+                const btn = document.createElement('button');
+                btn.textContent = `Play: ${opt.textContent}`;
+                btn.className = 'btn btn-primary btn-sm mt-2';
+                btn.onclick = () => new Audio(url).play().catch(() => {});
+                container.appendChild(btn);
+            }
+        });
+    }
+
+    // === Call Logs ===
+    async function fetchCallLogs(page = callLogsPage) {
+        callLogsPage = Math.max(1, Number(page) || 1);
+        const month = document.getElementById('month-selector-calllogs')?.value || '';
+        const date = document.getElementById('date-selector-calllogs')?.value || '';
+        const phone = (document.getElementById('phone-filter-calllogs')?.value || '').trim();
+        const spinner = document.getElementById('loading-spinner');
+        const table = document.getElementById('call-logs-table');
+        const prevBtn = document.getElementById('call-logs-prev-btn');
+        const nextBtn = document.getElementById('call-logs-next-btn');
+        const pageInfo = document.getElementById('call-logs-page-info');
+
+        spinner.style.display = 'block';
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+
+        try {
+            const params = new URLSearchParams({
+                page: String(callLogsPage),
+                page_size: String(callLogsPageSize),
+                sip_only: 'true'
+            });
+            if (month) params.set('month', month);
+            if (date) params.set('date', date);
+            if (phone) params.set('phone', phone);
+
+            const res = await fetch(`/calllogs?${params.toString()}`);
+            const data = await res.json();
+            if (data && data.error) throw new Error(data.error);
+            const rows = Array.isArray(data) ? data : (data.items || []);
+            const pager = (Array.isArray(data) ? null : data.pagination) || {};
+
+            table.innerHTML = '';
+            if (!rows.length) {
+                table.innerHTML = '<tr><td colspan="6" class="text-muted">No SIP call logs found for current filter.</td></tr>';
+            } else {
+                rows.forEach(log => {
+                    const ts = log.start_time ? new Date(log.start_time).toLocaleString() : 'N/A';
+                    table.innerHTML += `
+                        <tr>
+                            <td>${log.from_formatted || log.from || 'N/A'}</td>
+                            <td>${log.to || 'N/A'}</td>
+                            <td>${log.status || 'N/A'}</td>
+                            <td>${log.duration || 'N/A'}</td>
+                            <td>${ts}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="playRecording('${log.call_sid}')">Listen</button>
+                                <button class="btn btn-primary btn-sm" onclick="viewTranscript('${log.call_sid}')">Transcript</button>
+                            </td>
+                        </tr>`;
+                });
+            }
+
+            const currentPage = Number(pager.page || callLogsPage);
+            const totalPages = Number(pager.total_pages || 1);
+            callLogsPage = currentPage;
+            if (pageInfo) pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            if (prevBtn) prevBtn.disabled = !pager.has_prev;
+            if (nextBtn) nextBtn.disabled = !pager.has_next;
+        } catch (err) {
+            table.innerHTML = '<tr><td colspan="6" class="text-danger">Failed to load logs.</td></tr>';
+            if (pageInfo) pageInfo.textContent = 'Failed to load logs';
+        } finally {
+            spinner.style.display = 'none';
+        }
+    }
+
+    function applyCallLogFilters() {
+        callLogsPage = 1;
+        fetchCallLogs(1);
+    }
+
+    function clearCallLogFilters() {
+        const monthInput = document.getElementById('month-selector-calllogs');
+        const dateInput = document.getElementById('date-selector-calllogs');
+        const phoneInput = document.getElementById('phone-filter-calllogs');
+        if (monthInput) monthInput.value = '';
+        if (dateInput) dateInput.value = '';
+        if (phoneInput) phoneInput.value = '';
+        applyCallLogFilters();
+    }
+
+    async function playRecording(sid) {
+        try {
+            const res = await fetch(`/call_recording/${sid}`);
+            if (!res.ok) throw new Error();
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const audio = document.getElementById('recordingAudio');
+            audio.src = url;
+            audio.play();
+            new bootstrap.Modal(document.getElementById('recordingModal')).show();
+        } catch (err) {
+            alert('Recording not available.');
+        }
+    }
+
+    function stopPlayback() {
+        const audio = document.getElementById('recordingAudio');
+        audio.pause();
+        audio.currentTime = 0;
+    }
+
+    async function viewTranscript(sid) {
+        try {
+            const res = await fetch(`/fetch_transcript/${sid}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            const lines = data.transcript.split('\n');
+            const container = document.getElementById('transcriptContent');
+            container.innerHTML = '';
+            lines.forEach(line => {
+                const div = document.createElement('div');
+                div.className = line.toLowerCase().startsWith('user:') ? 'role-user' :
+                                line.toLowerCase().startsWith('assistant:') ? 'role-assistant' : '';
+                div.textContent = line;
+                container.appendChild(div);
+            });
+            new bootstrap.Modal(document.getElementById('transcriptModal')).show();
+        } catch (err) {
+            alert('Transcript not found.');
+        }
+    }
+
+    // === Dashboard Stats & Charts ===
+    async function fetchDashboardStats() {
+        const month = document.getElementById('month-selector-dashboard')?.value || '';
+        const date = document.getElementById('date-selector-dashboard')?.value || '';
+        const phone = (document.getElementById('phone-filter-dashboard')?.value || '').trim();
+        const direction = document.getElementById('direction-filter-dashboard')?.value || 'all';
+        const sipOnly = document.getElementById('sip-only-dashboard')?.checked ? 'true' : 'false';
+        const spinner = document.getElementById('dashboard-loading-spinner');
+        spinner.style.display = 'block';
+        try {
+            const params = new URLSearchParams();
+            if (month) params.set('month', month);
+            if (date) params.set('date', date);
+            if (phone) params.set('phone', phone);
+            if (direction) params.set('direction', direction);
+            params.set('sip_only', sipOnly);
+
+            const res = await fetch(`/dashboard_stats?${params.toString()}`);
+            const data = await res.json();
+            if (!res.ok || data.error) {
+                throw new Error(data.detail || data.error || 'Failed to fetch dashboard stats');
+            }
+
+            document.getElementById('total-calls').innerText = data.total_calls || 0;
+            document.getElementById('inbound-calls').innerText = data.inbound_calls || 0;
+            document.getElementById('outbound-calls').innerText = data.outbound_calls || 0;
+            document.getElementById('average-duration').innerText = data.average_duration ? `${data.average_duration} min` : '0 min';
+            renderCharts(data);
+        } catch (err) {
+            console.error('Dashboard error:', err);
+            alert(`Dashboard filter error: ${err.message || err}`);
+        } finally {
+            spinner.style.display = 'none';
+        }
+    }
+
+    function applyDashboardFilters() {
+        fetchDashboardStats();
+    }
+
+    function clearDashboardFilters() {
+        const monthInput = document.getElementById('month-selector-dashboard');
+        const dateInput = document.getElementById('date-selector-dashboard');
+        const phoneInput = document.getElementById('phone-filter-dashboard');
+        const directionInput = document.getElementById('direction-filter-dashboard');
+        const sipOnlyInput = document.getElementById('sip-only-dashboard');
+        if (monthInput) monthInput.value = '';
+        if (dateInput) dateInput.value = '';
+        if (phoneInput) phoneInput.value = '';
+        if (directionInput) directionInput.value = 'all';
+        if (sipOnlyInput) sipOnlyInput.checked = true;
+        const monthNow = new Date().toISOString().slice(0, 7);
+        if (monthInput) monthInput.value = monthNow;
+        fetchDashboardStats();
+    }
+
+    function renderCharts(stats) {
+        const ctxType = document.getElementById('callTypeChart')?.getContext('2d');
+        const ctxTrend = document.getElementById('callTrendChart')?.getContext('2d');
+        if (!ctxType || !ctxTrend) return;
+
+        if (callTypeChart) callTypeChart.destroy();
+        if (callTrendChart) callTrendChart.destroy();
+
+        callTypeChart = new Chart(ctxType, {
+            type: 'pie',
+            data: {
+                labels: ['Inbound', 'Outbound'],
+                datasets: [{ data: [stats.inbound_calls || 0, stats.outbound_calls || 0], backgroundColor: ['#009688', '#06CC64'] }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+
+        const labels = stats.daily_trend?.map(d => d.day) || [];
+        const values = stats.daily_trend?.map(d => d.count) || [];
+        callTrendChart = new Chart(ctxTrend, {
+            type: 'bar',
+            data: { labels, datasets: [{ label: 'Calls Per Day', data: values, backgroundColor: '#06CC64' }] },
+            options: {
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { ticks: { maxRotation: 45, minRotation: 0, autoSkip: true } }
+                }
+            }
+        });
+    }
+
+    // === Demon Prompts ===
+    function addDemonPrompt() {
+        const textarea = document.getElementById('bulk-call-container').style.display === 'block' ?
+            document.getElementById('bulk-system-message') : document.getElementById('system-message');
+        if (!textarea) return alert('No textarea found.');
+        const prompt = `Goal\nCall homeowners to offer a free roof inspection, confirm their interest, and schedule an appointment.\nCall Flow\n1. Introduction\nIntroduce yourself and state that you are calling from HK Entreprenad.\nMaintain a friendly tone and engage in small talk to make the conversation feel natural.\nUnderstand and process the user's language, but always respond in Swedish.\n2. Explain the Purpose of the Call\nInform the homeowner that HK Entreprenad is offering a free roof inspection to help property owners assess their roof’s condition and prevent potential issues.\nAsk if they have considered getting their roof checked recently.\n3. Adapt to the Customer’s Response\nIf the customer is interested or unsure:\nExplain that the inspection is completely free with no obligations.\nHighlight the benefits of early detection of roof problems.\nSuggest a date and time for the inspection or ask if they have a preferred time.\nIf the customer is hesitant or unsure:\nReassure them that the inspection is quick, free, and a good way to stay ahead of costly repairs.\nAsk if they’d like to book a tentative slot just to get a better idea of their roof’s condition.\nIf the customer is not interested:\nThank them for their time and mention that HK Entreprenad is available anytime if they change their mind.\n4. Confirm Appointment\nIf they agree, confirm the date and time.\nInform them that a roofing expert will call before the inspection to confirm the time.\n5. Closing\nThank them for their time.\nLet them know they can contact HK Entreprenad anytime for roofing concerns.\nBackground Information\nCompany: HK Entreprenad\nIndustry: Roofing and home maintenance\nTarget Audience: Homeowners who may be concerned about their roof’s condition\nService Offered: Free, no-obligation roof inspections\nKey Selling Points:\nEarly detection prevents costly repairs.\nInspections are quick and hassle-free.\nHelps homeowners stay prepared for upcoming seasons.\nExample Dialogues\nScenario 1: The customer is interested\nAI: Hej! Mitt namn är Daniel och jag ringer från HK Entreprenad. Vi erbjuder kostnadsfria takinspektioner för husägare i ditt område. Hur har du det idag?\nPerson: Hej, det låter intressant. Mitt tak är ganska gammalt, så jag kanske borde kolla upp det.\nAI: Det låter som en bra idé! Små problem kan snabbt bli större och dyrare att reparera. Inspektionen är helt gratis och tar cirka 30–60 minuter. Jag kan föreslå en tid på [datum/tid], eller har du en annan tid som passar bättre?\nPerson: Ja, torsdag eftermiddag skulle fungera bra.\nAI: Perfekt! Jag har bokat in din takinspektion för torsdag eftermiddag. En av våra takexperter kommer att ringa dig innan inspektionen för att bekräfta tiden. Tack, och ha en fin dag!\nScenario 2: The customer is unsure\nAI: Hej, mitt namn är Daniel och jag ringer från HK Entreprenad. Vi erbjuder en kostnadsfri takinspektion för att hjälpa husägare att få en tydlig bild av takets skick. Har du funderat på att inspektera ditt tak nyligen?\nPerson: Jag är inte säker på om det behövs.\nAI: Jag förstår! Det fina med denna inspektion är att den är helt kostnadsfri och ger dig trygghet inför framtida underhåll. Skulle du vara öppen för en snabb kontroll bara för att säkerställa att allt är i gott skick?\nPerson: Hm, jag antar att det kan vara bra att kolla.\nAI: Absolut! Det är alltid bättre att förebygga än att hantera dyra reparationer senare. Jag har lediga tider på [datum/tid]. Skulle det passa dig?\nPerson: Ja, vi kan boka det.\nAI: Perfekt, jag bokar in dig för en inspektion. En av våra takexperter kommer att ringa dig innan för att bekräfta. Tack för din tid!\nScenario 3: The customer is hesitant\nAI: Hej! Jag heter Daniel och ringer från HK Entreprenad. Vi erbjuder en gratis takinspektion för att hjälpa dig att undvika framtida problem med ditt tak.\nPerson: Jag vet inte… det låter som något jag kan vänta med.\nAI: Jag förstår! Men eftersom inspektionen är helt gratis och tar mindre än en timme, kan det vara ett enkelt sätt att försäkra sig om att allt är i bra skick. Om du vill kan vi boka en preliminär tid, så kan du alltid avboka om det inte passar.\nPerson: Okej, kanske. Vilka tider har ni?\nAI: Vi har tillgängliga tider på [datum/tid]. Passar något av dem?\nPerson: Okej, låt oss boka in det.\nAI: Perfekt, vi ses då! En takexpert kommer att ringa dig innan inspektionen för att bekräfta tiden. Ha en bra dag!\nScenario 4: The customer is not interested\nAI: Hej, jag heter Daniel och ringer från HK Entreprenad. Vi erbjuder gratis takinspektioner i ditt område.\nPerson: Nej tack, jag är inte intresserad.\nAI: Jag förstår! Om du någonsin behöver en inspektion eller underhåll för ditt tak, finns vi alltid här för att hjälpa till. Tack för din tid och ha en trevlig dag!\nScenario 5: The customer books an inspection\nAI: Hej, jag heter Daniel och ringer från HK Entreprenad. Vi erbjuder kostnadsfria takinspektioner för att hjälpa fastighetsägare att upptäcka potentiella problem i tid.\nPerson: Ja, det låter bra! Jag har funderat på att inspektera taket.\nAI: Perfekt! Inspektionen är helt gratis och tar bara 30–60 minuter. Jag har tillgängliga tider på [datum/tid]. Passar något av dem för dig?\nPerson: Ja, onsdag kl. 14 fungerar bra.\nAI: Perfekt! Jag har bokat din kostnadsfria takinspektion för onsdag kl. 14. En av våra takexperter kommer att ringa dig innan inspektionen för att bekräfta tiden.\nPerson: Tack så mycket!\nAI: Tack själv! Om du har några frågor under tiden, tveka inte att höra av dig. Ha en fin dag!\nFinal Notes\nThis prompt ensures that the AI maintains a structured approach while keeping the conversation natural.\nIt always responds in Swedish, even if the user speaks another language.\nThe script provides clear call handling for different scenarios, ensuring consistency and professionalism.`;
+        textarea.value = (textarea.value + '\n\n' + prompt).trim();
+    }
+
+    function addDemonPromptGerman() {
+        const textarea = document.getElementById('bulk-call-container').style.display === 'block' ?
+            document.getElementById('bulk-system-message') : document.getElementById('system-message');
+        if (!textarea) return alert('No textarea found.');
+        const prompt = `Überblick:\nSara ist eine freundliche und empathische Assistentin, die im Namen von Social Research Austria kurze Gesundheitsumfragen durchführt. Ihr Ziel ist es, ehrliche Meinungen zu Gesundheitsthemen zu sammeln und Teilnehmer zur Zustimmung für eine zukünftige Kontaktaufnahme durch VitaMed zu ermutigen.\nTon & Stil:\nFreundlich, einfühlsam und ermutigend\nLocker und natürlich, aber zielgerichtet\nNutzt menschliche Füllwörter („Hmm“, „Aha“, „Verstehe!“, „Ohh“) für eine angenehme Gesprächsatmosphäre\nStellt jeweils nur eine Frage, um den Teilnehmer nicht zu überfordern\nGesprächsleitfaden für Sara\nBegrüßung:\n"Hallo, mein Name ist Sara, und ich rufe im Auftrag von Social Research Austria an. Wir führen eine kurze Gesundheitsumfrage durch – sie dauert höchstens 2 Minuten. Das ist nicht zu lange, oder? Vielen Dank für Ihre Zeit und Unterstützung!"\nUmfragefragen:\nFrage 1:\n"Wie zufrieden sind Sie aktuell mit Ihrer persönlichen Gesundheit – auf einer Skala von 1 bis 5, wobei 1 für 'sehr unzufrieden' und 5 für 'sehr zufrieden' steht?"\n(Bestätige die Antwort: „Danke für Ihre ehrliche Einschätzung – das ist wirklich wertvoll!“)\nFrage 2:\n"Wie wichtig ist Ihnen eine gesunde Ernährung im Alltag? Würden Sie sagen:\na) Sehr wichtig\nb) Eher wichtig\nc) Nicht sehr wichtig\nd) Gar nicht wichtig?"\n(Bestätige: „Aha, das ergibt Sinn! Danke für Ihre Einschätzung.“)\nFrage 3:\n"Wo informieren Sie sich bevorzugt über Gesundheitsthemen?\na) Beim Arzt oder in der Apotheke\nb) In Zeitschriften oder Büchern\nc) Online auf Gesundheitsseiten\nd) Ich suche normalerweise keine Gesundheitsinformationen."\n(Bestätige: „Online ist super praktisch – man findet wirklich alles dort!“)\nFrage 4:\n"Für unsere Statistik: Dürfte ich Ihr Geburtsjahr wissen? Ich helfe Ihnen – es beginnt mit 19...?"\n(Bestätige: „Vielen Dank – das passt perfekt!“)\nOpt-In-Frage:\n"Vielen Dank für Ihre Zeit und ehrlichen Antworten! Am Ende der Umfrage gibt es eine Verlosung mit tollen Preisen für die Teilnehmer. Falls Sie gewinnen, würden wir oder die Firma VitaMed Sie kontaktieren. Das klingt doch gut, oder?"\n(Falls Zustimmung: „Super, ich notiere das gleich – herzlichen Dank!“)\nVerabschiedung:\n"Vielen Dank nochmals, dass Sie sich die Zeit genommen haben – das weiß ich wirklich zu schätzen! Ich wünsche Ihnen einen wunderbaren Tag. Bleiben Sie gesund und genießen Sie die Woche! Auf Wiederhören!"\nUmgang mit Einwänden\n„Ich habe keine Zeit.“\n„Das verstehe ich total – wir sind alle beschäftigt! Das Gute ist, dass die Umfrage nur 2 Minuten dauert. Lassen Sie uns ganz schnell starten, okay? Erste Frage: Wie zufrieden sind Sie mit Ihrer persönlichen Gesundheit?“\n„Woher haben Sie meine Nummer?“\n„Gute Frage! Ihre Nummer wurde zufällig ausgewählt, damit wir eine breite Meinung einholen können. Wir halten uns dabei streng an den Datenschutz, und alle Informationen bleiben vertraulich. Klingt das in Ordnung? Dann starten wir gleich: Wie zufrieden sind Sie mit Ihrer persönlichen Gesundheit?“\n„Ich habe kein Interesse.“\n„Ich verstehe, dass solche Anrufe unerwartet kommen. Aber es sind nur 4 kurze Fragen, und Ihre Meinung hilft uns sehr. Es dauert wirklich nur 2 Minuten. Sollen wir schnell starten? Erste Frage: Wie zufrieden sind Sie mit Ihrer persönlichen Gesundheit?“`;
+        textarea.value = (textarea.value + '\n\n' + prompt).trim();
+    }
+
+    // === Voice Clone ===
+    document.getElementById('voice-clone-form')?.addEventListener('submit', async e => {
+        e.preventDefault();
+        const name = document.getElementById('voice-name').value.trim();
+        const file = document.getElementById('voice-file').files[0];
+        if (!name || !file) return alert('Name and file required.');
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('file', file);
+        const resultDiv = document.getElementById('clone-result');
+        resultDiv.innerHTML = '<p>Cloning in progress...</p>';
+        try {
+            const res = await fetch('/voice/clone', { method: 'POST', body: formData });
+            const data = await res.json();
+            resultDiv.innerHTML = res.ok
+                ? `<p style="color:green;">
+                  Success!<br> 
+                  Voice Name: <strong>${data.voice_name}</strong>br
+                  Voice ID: <strong>${data.voice_id}</strong></p>`
+                : `<p style="color:red;">Error: ${data.error || 'Unknown'}</p>`;
+            fetchElevenLabsVoices();
+        } catch (err) {
+            resultDiv.innerHTML = `<p style="color:red;">Network error: ${err.message}</p>`;
+        }
+    });
+
+    // === Collected Info ===
+    async function fetchCollectedInfo() {
+        const loading = document.getElementById('collected-info-loading');
+        const tableBody = document.getElementById('collected-info-table');
+        const month = document.getElementById('month-selector').value;
+        tableBody.innerHTML = '';
+        loading.style.display = 'block';
+        try {
+            const res = await fetch('https://67aee75e9e85da2f020eb86a.mockapi.io/aziz');
+            const data = await res.json();
+            data.forEach(item => {
+                const createdAt = new Date(item.createdAt || item['createdAt']);
+                const monthStr = `${createdAt.getFullYear()}-${String(createdAt.getMonth() + 1).padStart(2, '0')}`;
+                if (!month || month === monthStr) {
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${item.name || 'N/A'}</td>
+                            <td>${item.email || 'N/A'}</td>
+                            <td>${item.date || 'N/A'}</td>
+                            <td>${item.time || 'N/A'}</td>
+                            <td>${createdAt.toLocaleString()}</td>
+                        </tr>`;
+                }
+            });
+        } catch (err) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-danger">Failed to load data.</td></tr>';
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    // === User Settings ===
+    async function fetchUserSettings() {
+        try {
+            const res = await fetch('/get_user_settings');
+            const data = await res.json();
+            if (data) {
+                document.getElementById('twilio_sid').value = data.twilio_sid || '';
+                document.getElementById('twilio_token').value = data.twilio_token || '';
+                document.getElementById('openai_key').value = data.openai_key || '';
+                document.getElementById('elevenlabs_key').value = data.elevenlabs_key || '';
+                document.getElementById('email_sender').value = data.email_sender || '';
+                document.getElementById('email_recipient').value = data.email_recipient || '';
+                const settingsTransfer = document.getElementById('transfer_number');
+                if (settingsTransfer && data.transfer_number) {
+                    const exists = Array.from(settingsTransfer.options).some(opt => opt.value === data.transfer_number);
+                    if (!exists) {
+                        const opt = document.createElement('option');
+                        opt.value = data.transfer_number;
+                        opt.textContent = data.transfer_number;
+                        settingsTransfer.appendChild(opt);
+                    }
+                }
+                if (settingsTransfer) settingsTransfer.value = data.transfer_number || '';
+                document.getElementById('system_message').value = data.system_message || '';
+            }
+        } catch (err) {
+            console.error('Error loading settings:', err);
+        }
+    }
+
+    async function saveUserSettings(e) {
+        e.preventDefault();
+        const settings = {
+            twilio_sid: document.getElementById('twilio_sid').value.trim(),
+            twilio_token: document.getElementById('twilio_token').value.trim(),
+            openai_key: document.getElementById('openai_key').value.trim(),
+            elevenlabs_key: document.getElementById('elevenlabs_key').value.trim(),
+            email_sender: document.getElementById('email_sender').value.trim(),
+            email_recipient: document.getElementById('email_recipient').value.trim(),
+            transfer_number: document.getElementById('transfer_number').value.trim(),
+            system_message: document.getElementById('system_message').value
+        };
+        try {
+            const res = await fetch('/update_user_settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            });
+            const data = await res.json();
+            alert(data.success ? 'Settings saved!' : 'Error saving settings.');
+        } catch (err) {
+            alert('Error saving settings.');
+        }
+    }
+
+    // === Inbound Settings ===
+    async function loadInboundSettings() {
+        try {
+            const res = await fetch('/get_inbound_settings');
+            const data = await res.json();
+            document.getElementById('inbound-agent-system-message').value = data.SYSTEM_MESSAGE || '';
+            document.getElementById('inbound-language-selection').value = data.language || '';
+            const inboundTransfer = document.getElementById('inbound-transfer-number');
+            if (inboundTransfer && data.TRANSFER_NUMBER) {
+                const exists = Array.from(inboundTransfer.options).some(opt => opt.value === data.TRANSFER_NUMBER);
+                if (!exists) {
+                    const opt = document.createElement('option');
+                    opt.value = data.TRANSFER_NUMBER;
+                    opt.textContent = data.TRANSFER_NUMBER;
+                    inboundTransfer.appendChild(opt);
+                }
+            }
+            if (inboundTransfer) inboundTransfer.value = data.TRANSFER_NUMBER || '';
+        } catch (err) {
+            console.error('Error loading inbound settings:', err);
+        }
+    }
+
+    async function loadInboundVoices() {
+        await fetchElevenLabsVoices();
+    }
+
+    async function fetchInboundAgentPrompts() {
+        try {
+            const res = await fetch('/fetch_prompts');
+            const data = await res.json();
+            const sel = document.getElementById('inbound-agent-options');
+            sel.innerHTML = '<option value="" disabled selected>Select Agent</option>';
+            data.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.id;
+                opt.textContent = a.name;
+                opt.dataset.prompt = a.prompt || '';
+                sel.appendChild(opt);
+            });
+        } catch (err) {
+            console.error('Error loading inbound agents:', err);
+        }
+    }
+
+    document.getElementById('inbound-agent-options')?.addEventListener('change', e => {
+        const prompt = e.target.selectedOptions[0].dataset.prompt || '';
+        document.getElementById('inbound-agent-system-message').value = prompt;
+    });
+
+    async function loadInboundTwilioNumbers() {
+        await fetchTwilioNumbers();
+    }
+
+    document.getElementById('inbound-twilio-number')?.addEventListener('change', async function () {
+        const num = this.value;
+        try {
+            const res = await fetch(`/agent/${num}`);
+            const data = await res.json();
+            if (data.agent) {
+                document.getElementById('inbound-agent-system-message').value = data.agent.SYSTEM_MESSAGE || '';
+                document.getElementById('inbound-voice-selection').value = data.agent.ELEVENLABS_VOICE_ID || '';
+                document.getElementById('inbound-language-selection').value = data.agent.language || '';
+                const inboundTransfer = document.getElementById('inbound-transfer-number');
+                if (inboundTransfer && data.agent.TRANSFER_NUMBER) {
+                    const exists = Array.from(inboundTransfer.options).some(opt => opt.value === data.agent.TRANSFER_NUMBER);
+                    if (!exists) {
+                        const opt = document.createElement('option');
+                        opt.value = data.agent.TRANSFER_NUMBER;
+                        opt.textContent = data.agent.TRANSFER_NUMBER;
+                        inboundTransfer.appendChild(opt);
+                    }
+                }
+                if (inboundTransfer) inboundTransfer.value = data.agent.TRANSFER_NUMBER || '';
+            } else {
+                document.getElementById('inbound-agent-system-message').value = '';
+                document.getElementById('inbound-voice-selection').value = '';
+                document.getElementById('inbound-language-selection').value = '';
+                const inboundTransfer = document.getElementById('inbound-transfer-number');
+                if (inboundTransfer) inboundTransfer.value = '';
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    async function updateInboundSettings() {
+        const payload = {
+            SYSTEM_MESSAGE: document.getElementById('inbound-agent-system-message').value,
+            ELEVENLABS_VOICE_ID: document.getElementById('inbound-voice-selection').value,
+            language: document.getElementById('inbound-language-selection').value,
+            TRANSFER_NUMBER: document.getElementById('inbound-transfer-number').value,
+            TWILIO_NUMBER: document.getElementById('inbound-twilio-number').value
+        };
+        try {
+            const res = await fetch('/update_agent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            alert(data.success ? 'Inbound settings updated!' : 'Failed to update.');
+        } catch (err) {
+            alert('Error updating inbound settings.');
+        }
+    }
+
+    // === Twilio SMS Template ===
+    async function loadTwilioMessage() {
+        try {
+            const res = await fetch('/get_twilio_message');
+            const { message } = await res.json();
+            document.getElementById('twilio-msg-text').value = message || '';
+        } catch (err) {
+            console.error('Error loading SMS:', err);
+        }
+    }
+
+    document.getElementById('save-twilio-msg-btn')?.addEventListener('click', async () => {
+        const msg = document.getElementById('twilio-msg-text').value.trim();
+        try {
+            const res = await fetch('/update_twilio_message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await res.json();
+            alert(data.success ? 'SMS template saved!' : 'Error saving.');
+        } catch (err) {
+            alert('Failed to save SMS template.');
+        }
+    });
+
+    // === Agent Management (Prompts) ===
+    async function populateDropdowns() {
+        await fetchElevenLabsVoices();
+        await fetchTwilioNumbers();
+        await fetchTransferNumbers();
+    }
+
+    async function addPrompt(e) {
+        e.preventDefault();
+        const data = {
+            name: document.getElementById('prompt-name').value.trim(),
+            prompt: document.getElementById('prompt-content').value.trim(),
+            language: document.getElementById('language-selection').value,
+            voice: document.getElementById('voice-selection').value,
+            model: document.getElementById('model-selection').value,
+            from_number: document.getElementById('from-number').value,
+            transfer_number: document.getElementById('transfer-number').value,
+            email_tool: document.getElementById('email-tool').value,
+            human_speaks_first: document.getElementById('human-speaks-first').checked,
+            agent_type: document.getElementById('agent-type').value
+        };
+        const requiredKeys = [
+            'name', 'prompt', 'language', 'voice',
+            'from_number', 'transfer_number', 'agent_type', 'model'
+        ];
+        if (requiredKeys.some(key => !data[key])) return alert('All fields required.');
+        try {
+            const res = await fetch('/add_prompt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const json = await res.json();
+            if (res.ok) {
+                alert('Agent added!');
+                document.getElementById('prompt-form').reset();
+                fetchPrompts();
+                fetchAgentPrompts();
+            } else {
+                alert(json.error || 'Error adding agent.');
+            }
+        } catch (err) {
+            alert('Error adding agent.');
+        }
+    }
+
+    async function fetchPrompts() {
+        try {
+            const res = await fetch('/fetch_prompts');
+            const data = await res.json();
+            loadedPrompts = data;
+            const list = document.getElementById('prompts-list');
+            list.innerHTML = '';
+            if (data.length === 0) {
+                list.innerHTML = '<p>No agents found.</p>';
+                return;
+            }
+            data.forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col mb-3';
+                const truncated = item.prompt?.length > 80 ? item.prompt.substring(0, 80) + '...' : item.prompt;
+                col.innerHTML = `
+                    <div class="card h-100" style="cursor:pointer;" onclick="openPromptDetails('${item.id}')">
+                        <img src="https://www.shutterstock.com/image-vector/3d-cartoon-young-woman-call-600nw-2132118295.jpg" class="card-img-top" style="height:150px;object-fit:cover;">
+                        <div class="card-body p-2">
+                            <h5 class="card-title" style="font-size:1rem;margin:0;">${item.name}</h5>
+                            <p class="card-text" style="font-size:0.85rem;">Lang: ${item.language || 'N/A'}</p>
+                            <p class="card-text" style="font-size:0.85rem;">From: ${item.from_number || 'N/A'}</p>
+                            <p class="card-text" style="font-size:0.85rem;">Type: ${item.agent_type || 'N/A'}</p>
+                            <p class="card-text" style="font-size:0.85rem;">Email: ${item.email_tool === 'lead_email' ? 'Enabled' : 'Disabled'}</p>
+                            <p class="card-text" style="font-size:0.85rem;">Human First: ${item.human_speaks_first ? 'Yes' : 'No'}</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <button class="btn btn-sm btn-success" onclick="editPrompt('${item.id}');event.stopPropagation();">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deletePrompt('${item.id}');event.stopPropagation();">Delete</button>
+                        </div>
+                    </div>`;
+                list.appendChild(col);
+            });
+        } catch (err) {
+            document.getElementById('prompts-list').innerHTML = '<p class="text-danger">Failed to load agents.</p>';
+        }
+    }
+
+    function editPrompt(id) {
+        const item = loadedPrompts.find(x => x.id === id);
+        if (!item) return alert('Agent not found.');
+        document.getElementById('prompt-name').value = item.name || '';
+        document.getElementById('prompt-content').value = item.prompt || '';
+        document.getElementById('language-selection').value = item.language || '';
+        document.getElementById('voice-selection').value = item.voice || '';
+        document.getElementById('model-selection').value = item.model || '';
+        document.getElementById('from-number').value = item.from_number || '';
+        const transferSelect = document.getElementById('transfer-number');
+        if (transferSelect && item.transfer_number) {
+            const exists = Array.from(transferSelect.options).some(opt => opt.value === item.transfer_number);
+            if (!exists) {
+                const opt = document.createElement('option');
+                opt.value = item.transfer_number;
+                opt.textContent = item.transfer_number;
+                transferSelect.appendChild(opt);
+            }
+        }
+        if (transferSelect) transferSelect.value = item.transfer_number || '';
+        document.getElementById('email-tool').value = item.email_tool || 'none';
+        document.getElementById('agent-type').value = item.agent_type || '';
+        document.getElementById('human-speaks-first').checked = !!item.human_speaks_first;
+        currentPromptId = id;
+
+        document.getElementById('create-btn').style.display = 'none';
+        let updateBtn = document.getElementById('update-prompt-btn');
+        if (!updateBtn) {
+            updateBtn = document.createElement('button');
+            updateBtn.id = 'update-prompt-btn';
+            updateBtn.type = 'button';
+            updateBtn.className = 'btn btn-success ms-2';
+            updateBtn.textContent = 'Update';
+            updateBtn.onclick = updatePrompt;
+            document.getElementById('create-btn').after(updateBtn);
+        } else {
+            updateBtn.style.display = 'inline-block';
+        }
+    }
+
+    async function updatePrompt() {
+        if (!currentPromptId) return alert('No agent selected.');
+        const data = {
+            name: document.getElementById('prompt-name').value.trim(),
+            prompt: document.getElementById('prompt-content').value.trim(),
+            language: document.getElementById('language-selection').value,
+            voice: document.getElementById('voice-selection').value,
+            model: document.getElementById('model-selection').value,
+            from_number: document.getElementById('from-number').value,
+            transfer_number: document.getElementById('transfer-number').value,
+            email_tool: document.getElementById('email-tool').value,
+            human_speaks_first: document.getElementById('human-speaks-first').checked,
+            agent_type: document.getElementById('agent-type').value
+        };
+        const requiredKeys = [
+            'name', 'prompt', 'language', 'voice',
+            'from_number', 'transfer_number', 'agent_type', 'model'
+        ];
+        if (requiredKeys.some(key => !data[key])) return alert('All fields required.');
+        try {
+            const res = await fetch(`/update_prompt/${currentPromptId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                alert('Agent updated!');
+                document.getElementById('prompt-form').reset();
+                currentPromptId = null;
+                document.getElementById('update-prompt-btn')?.remove();
+                document.getElementById('create-btn').style.display = 'inline-block';
+                fetchPrompts();
+                fetchAgentPrompts();
+            } else {
+                alert('Error updating agent.');
+            }
+        } catch (err) {
+            alert('Error updating agent.');
+        }
+    }
+
+    function openPromptDetails(id) {
+        editPrompt(id);
+        showContainer('prompt-container');
+    }
+
+    async function deletePrompt(id) {
+        if (!confirm('Delete this agent?')) return;
+        try {
+            const res = await fetch(`/delete_prompt/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert('Agent deleted.');
+                fetchPrompts();
+                fetchAgentPrompts();
+            }
+        } catch (err) {
+            alert('Error deleting agent.');
+        }
+    }
+
+    // === DOM Loaded ===
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initial data loads
+        fetchCurrentFile();
+        fetchTransferNumbers();
+        fetchTwilioNumbers();
+        fetchElevenLabsVoices();
+        fetchAgentPrompts();
+        fetchSavedNumbers();
+        fetchUserSettings();
+
+        // Voice preview
+        attachVoicePreview('voice-selection', 'voice-preview-container');
+        attachVoicePreview('bulk-voice-selection', 'bulk-voice-preview-container');
+        attachVoicePreview('inbound-voice-selection', 'inbound-voice-preview-container');
+
+        // Button listeners
+        document.getElementById('start-bulk-call-btn')?.addEventListener('click', startBulkCalls);
+        document.getElementById('start-call-btn')?.addEventListener('click', startCall);
+        document.getElementById('save-transfer-btn')?.addEventListener('click', saveTransferNumber);
+        document.getElementById('create-btn')?.addEventListener('click', addPrompt);
+        document.getElementById('month-selector-dashboard')?.addEventListener('change', applyDashboardFilters);
+        document.getElementById('date-selector-dashboard')?.addEventListener('change', applyDashboardFilters);
+        document.getElementById('direction-filter-dashboard')?.addEventListener('change', applyDashboardFilters);
+        document.getElementById('sip-only-dashboard')?.addEventListener('change', applyDashboardFilters);
+        document.getElementById('apply-dashboard-filters-btn')?.addEventListener('click', applyDashboardFilters);
+        document.getElementById('clear-dashboard-filters-btn')?.addEventListener('click', clearDashboardFilters);
+        document.getElementById('phone-filter-dashboard')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') applyDashboardFilters();
+        });
+        document.getElementById('month-selector-calllogs')?.addEventListener('change', applyCallLogFilters);
+        document.getElementById('date-selector-calllogs')?.addEventListener('change', applyCallLogFilters);
+        document.getElementById('apply-calllog-filters-btn')?.addEventListener('click', applyCallLogFilters);
+        document.getElementById('clear-calllog-filters-btn')?.addEventListener('click', clearCallLogFilters);
+        document.getElementById('call-logs-prev-btn')?.addEventListener('click', () => fetchCallLogs(callLogsPage - 1));
+        document.getElementById('call-logs-next-btn')?.addEventListener('click', () => fetchCallLogs(callLogsPage + 1));
+        document.getElementById('phone-filter-calllogs')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') applyCallLogFilters();
+        });
+        document.getElementById('recordingModal')?.addEventListener('hidden.bs.modal', stopPlayback);
+        document.getElementById('save-user-settings')?.addEventListener('click', saveUserSettings);
+        document.getElementById('update-inbound-btn')?.addEventListener('click', updateInboundSettings);
+
+        // Sidebar navigation
+        document.getElementById('send-call-btn')?.addEventListener('click', () => showContainer('send-call-container'));
+        document.getElementById('bulk-call-btn')?.addEventListener('click', () => showContainer('bulk-call-container'));
+        document.getElementById('call-logs-btn')?.addEventListener('click', () => showContainer('call-logs-container'));
+        document.getElementById('collected-info-btn')?.addEventListener('click', () => showContainer('collected-info-container'));
+        document.getElementById('user-settings-btn')?.addEventListener('click', () => showContainer('user-settings-container'));
+        document.getElementById('prompt-btn')?.addEventListener('click', () => showContainer('prompt-container'));
+        document.getElementById('inbound-btn')?.addEventListener('click', () => showContainer('inbound-container'));
+        document.getElementById('dashboard-btn')?.addEventListener('click', () => showContainer('dashboard-container'));
+        document.getElementById('voice-btn')?.addEventListener('click', () => showContainer('voice-clone-container'));
+
+        // Default view
+        showContainer('dashboard-container');
+    });
+
+    function logoutUser() {
+        fetch('/logout', { method: 'GET' })
+            .then(() => {
+                window.location.href = '/login';
+            })
+            .catch(err => {
+                console.error('Logout failed:', err);
+                // Force redirect even if fetch fails (in case of network issue)
+                window.location.href = '/login';
+            });
+    }
+    function renderCSVTable() {
+    const tbody = document.querySelector('#csv-table tbody');
+    tbody.innerHTML = '';
+
+    csvData.forEach((c, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${c.name}</td>
+            <td>${c.phone_number}</td>
+            <td>
+              <button class="btn btn-danger btn-sm"
+                      onclick="deleteCSVRow(${index})">
+                ❌ Delete
+              </button>
+            </td>
+          </tr>`;
+    });
+
+    document.getElementById('total-contacts').innerText = csvData.length;
+    document.getElementById('csv-preview').style.display =
+        csvData.length ? 'block' : 'none';
+}
+
+function deleteCSVRow(index) {
+    if (!confirm('Remove this number?')) return;
+    csvData.splice(index, 1);
+    renderCSVTable();
+}
+
+function addManualContact() {
+    const name = document.getElementById('manual-name').value.trim();
+    const phone = document.getElementById('manual-phone').value.trim();
+
+    if (!name || !phone) {
+        alert('Name and phone number required.');
+        return;
+    }
+
+    // basic phone validation
+    if (!phone.startsWith('+')) {
+        alert('Phone number must be in E.164 format (e.g. +1234567890)');
+        return;
+    }
+
+    csvData.push({
+        name: name,
+        phone_number: phone
+    });
+
+    document.getElementById('manual-name').value = '';
+    document.getElementById('manual-phone').value = '';
+
+    renderCSVTable();
+}
+
+
+</script>
+
+</body>
+
+</html> 
