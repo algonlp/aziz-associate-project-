@@ -444,6 +444,7 @@ ALGORITHM = "HS256"
 static_dir = os.getenv("STATIC_DIR", str(BASE_DIR / "statics"))
 transcript_dir = os.getenv("TRANSCRIPTS_STATIC_DIR", str(BASE_DIR / "transcrip"))
 audio_static_dir = os.getenv("AUDIO_STATIC_DIR", str(BASE_DIR / "audio"))
+os.makedirs(transcript_dir, exist_ok=True)
 
 # Mount static files
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
